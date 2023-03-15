@@ -16,7 +16,7 @@ class Console():
     
     # Console options
     prependDateTime = True # True = prepend date and time to message, False = don't prepend date and time to message
-    doNotShowLogAfterType = 2 # 0 = error, 1 = warning, 2 = info, 3 = debug
+    doNotShowLogAfterType = 3 # 0 = error, 1 = warning, 2 = info, 3 = debug
     
     def __init__(self) -> None:
         # Console initialization/properties

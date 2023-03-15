@@ -57,14 +57,16 @@ class StatusBar():
 
         # add CPU usage to status bar (bottom right) but on the left of current time
         self.cpu_usage = QLabel("CPU: 0%")
+        self.statusBar.devider = QLabel(" | ")
+        self.statusBar.addPermanentWidget(self.statusBar.devider)
         self.statusBar.addPermanentWidget(self.cpu_usage)
+        
+        # Console debug
+        self.console.log("CPU usage thread started", "debug")
 
     def update_cpu_usage(self, cpu_usage):
         # update CPU usage in status bar
-        self.console.log("Thread started new CPU usage", "debug")
         self.cpu_usage.setText("CPU: " + str(cpu_usage) + "%")
-        self.console.log("CPU: " + str(cpu_usage) + "%", "debug")
-        self.console.log("Thread finished getting new CPU usage", "debug")
         
     def appendText(self, text):
         """Append text to status bar

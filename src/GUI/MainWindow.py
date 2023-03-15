@@ -30,21 +30,31 @@ class MainWindow(QMainWindow):
         self.setStatusBar(self.statusBar.statusBar)
         
         # create bottom dock widget and add console to it
-        self.bottomDock = QDockWidget("Console", self)
-        self.bottomDock.setAllowedAreas(Qt.BottomDockWidgetArea)
-        self.bottomDock.setWidget(self.console.console)
-        self.addDockWidget(Qt.BottomDockWidgetArea, self.bottomDock)
-
+        self.consoleDock = QDockWidget("Console", self)
+        self.consoleDock.setAllowedAreas(Qt.BottomDockWidgetArea | Qt.TopDockWidgetArea | Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
+        self.consoleDock.setWidget(self.console.console)
+        self.addDockWidget(Qt.BottomDockWidgetArea, self.consoleDock)
+        self.consoleDock.hide()
         
         # -------------        actions       -----------------
+        # Home tab
+        self._refresh_action = self.add_action("Refresh", "refresh", "Refresh", True, self.on_refresh)
+        self._grid_tile = self.add_action("Tile", "grid_tile", "Tile", True, self.on_grid_tile)
+        self._grid_cascade = self.add_action("Cascade", "grid_cascade", "Cascade", True, self.on_grid_cascade)
+        self._grid_close_all = self.add_action("Close all", "grid_close_all", "Close all", True, self.on_grid_close_all)
+        self._alert_action = self.add_action("Alerts", "alert", "Alerts", True, self.on_alert)
+        self._alert_mute = self.add_action("Mute", "alert_mute", "Mute", True, self.on_alert_mute)
         
-        self._open_settings = self.add_action("Settings", "settings", "Open settings", True, self.on_open_settings)
-        self._open_tools = self.add_action("Tools", "tools", "Open tools", True, self.on_open_tools)
+        # Settings tab
+        self._open_settings = self.add_action("Settings", "settings", "Open settings", True, self.on_open_settings) 
+        self._open_console = self.add_action("Open console", "console", "Open console", True, self.on_open_console)
+        self._close_console = self.add_action("Close console", "console", "Close console", True, self.on_close_console)
+        self._close_console.setEnabled(False)
 
         # Ribbon
         self._ribbon = RibbonWidget(self)
         self.addToolBar(self._ribbon)
-        self.init_ribbon()            
+        self.init_ribbon()
 
     def add_action(self, caption, icon_name, status_tip, icon_visible, connection, shortcut=None):
         action = QAction(get_icon(icon_name), caption, self)
@@ -58,13 +68,67 @@ class MainWindow(QMainWindow):
 
     def init_ribbon(self):
         # -------------      ribbon       -----------------
+        home_tab = self._ribbon.add_ribbon_tab("Home")
+        home_pane = home_tab.add_ribbon_pane("Home")
+        grid_pane = home_tab.add_ribbon_pane("Grid")
+        alert_pane = home_tab.add_ribbon_pane("Alerts")
+        window_pane = home_tab.add_ribbon_pane("Window")
+        help_pane = home_tab.add_ribbon_pane("Help")
+        
+        # Home pane
+        home_pane.add_ribbon_widget(RibbonButton(self, self._refresh_action, True))
+        
+        # Grid pane
+        grid_pane.add_ribbon_widget(RibbonButton(self, self._grid_tile, True))
+        grid_pane.add_ribbon_widget(RibbonButton(self, self._grid_cascade, True))
+        grid_pane.add_ribbon_widget(RibbonButton(self, self._grid_close_all, True))
+        
+        # Alert pane
+        alert_pane.add_ribbon_widget(RibbonButton(self, self._alert_action, True))
+        alert_pane.add_ribbon_widget(RibbonButton(self, self._alert_mute, True))
+        
+        # System Tab
         system_tab = self._ribbon.add_ribbon_tab("System")
         configuration_pane = system_tab.add_ribbon_pane("Configuration")
         configuration_pane.add_ribbon_widget(RibbonButton(self, self._open_settings, True))
-        configuration_pane.add_ribbon_widget(RibbonButton(self, self._open_tools, True))
+        
+        console_pane = system_tab.add_ribbon_pane("Console")
+        console_pane.add_ribbon_widget(RibbonButton(self, self._open_console, True))
+        console_pane.add_ribbon_widget(RibbonButton(self, self._close_console, True))
 
     def on_open_settings(self):
         pass
     
-    def on_open_tools(self):
+    def on_open_console(self):
+        if self.consoleDock.isVisible():
+            return
+        self.console.log("Console opened", "debug")
+        self.consoleDock.show()
+        self._open_console.setEnabled(False)
+        self._close_console.setEnabled(True)
+        
+    def on_close_console(self):
+        if not self.consoleDock.isVisible():
+            return
+        self.console.log("Console closed", "debug")
+        self.consoleDock.hide()
+        self._open_console.setEnabled(True)
+        self._close_console.setEnabled(False)
+        
+    def on_refresh(self):
+        pass
+    
+    def on_grid_tile(self):
+        self.mdiArea.mdiArea.tileSubWindows()
+        
+    def on_grid_cascade(self):
+        self.mdiArea.mdiArea.cascadeSubWindows()
+        
+    def on_grid_close_all(self):
+        self.mdiArea.mdiArea.closeAllSubWindows()
+        
+    def on_alert(self):
+        pass
+
+    def on_alert_mute(self):
         pass

@@ -18,6 +18,18 @@ class Icons(object):
         
         self._icons = {}
         self.make_icon("settings", "icons/settings.png")
+        self.make_icon("logo", "icons/logo.png")
+        self.make_icon("tools", "icons/tools.png")
+        self.make_icon("console", "icons/console.png")
+        self.make_icon("console_disabled", "icons/console_disabled.png")
+        self.make_icon("refresh", "icons/refresh.png")
+        self.make_icon("grid_tile", "icons/grid_tile.png")
+        self.make_icon("grid_cascade", "icons/grid_cascade.png")
+        self.make_icon("grid_close_all", "icons/grid_close_all.png")
+        self.make_icon("alert", "icons/alert.png")
+        self.make_icon("alert_mute", "icons/alert_mute.png")
+        
+        # Default fallback icon
         self.make_icon("default", "icons/default.png")
 
     def make_icon(self, name, path):
