@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import QStatusBar, QLabel
 from PyQt5.QtCore import QTimer, QThread, pyqtSignal
 import os, time
-from GUI.Console import Console
 
 class StatusBar():
     

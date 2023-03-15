@@ -1,5 +1,4 @@
 from PyQt5.QtCore import *
-from PyQt5.QtGui import QKeySequence as QKSec
 from GUI.Ribbon.RibbonButton import RibbonButton
 from GUI.Ribbon.Icons import get_icon
 from GUI.Ribbon.RibbonTextbox import RibbonTextbox

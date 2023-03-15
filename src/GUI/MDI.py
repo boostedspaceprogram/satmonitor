@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import QMdiArea, QMdiSubWindow, QTextEdit, QStatusBar
 from PyQt5.QtCore import QTimer
-import os, time
 
 class MDI():
     
