@@ -23,16 +23,16 @@ Here is a list of the features that we want to implement in the application. Whe
 - [ ] Display of the satellites' telemetry data (altitude, velocity, etc.)
 - [ ] Display of the satellites' images and 3D models (if available)
 #### SHOULD HAVE
-- Ability to view ongoing and upcoming missions and their details
-- Live video feed of ongoing missions (if available)
-- Notifications for upcoming events (launches, landings, etc.)
+- [ ] Ability to view ongoing and upcoming missions and their details
+- [ ] Live video feed of ongoing missions (if available)
+- [ ] Notifications for upcoming events (launches, landings, etc.)
 
 #### COULD HAVE
-- Live radio SDR (Software Defined Radio) feed and frequencies of the satellites (if available)
-- Push notifications for upcoming events (launches, landings, etc.) to mobile devices
+- [ ] Live radio SDR (Software Defined Radio) feed and frequencies of the satellites (if available)
+- [ ] Push notifications for upcoming events (launches, landings, etc.) to mobile devices
 
 #### WON'T HAVE
-- Paid subscription, ads, or any other form of monetization, unless it is for a good cause. ❤️🚀
+- [X] Paid subscription, ads, or any other form of monetization, unless it is for a good cause. ❤️🚀
 
 ## How to build and run on Windows
 1. Install python3 and pip3
