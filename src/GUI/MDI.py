@@ -1,6 +1,5 @@
-from PyQt5.QtWidgets import QMdiArea, QMdiSubWindow, QTextEdit, QLabel
-from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile
-import folium
+from PyQt5.QtWidgets import QMdiArea, QMdiSubWindow, QTextEdit
+from PyQt5.QtWebEngineWidgets import QWebEngineView
 
 class MDI():
     
@@ -20,24 +19,16 @@ class MDI():
         self.open()
         
     def open(self):
-        # add mdi sub window
-        sub = QMdiSubWindow()
-        sub.setWidget(QTextEdit())
-        self.mdiArea.addSubWindow(sub)
-        sub.show()
-        
-        
-        subwindow = QMdiSubWindow()
-        subwindow.setWindowTitle("Cesium Globe")
+        # Globe sub window
+        globe_3d_subwindow = QMdiSubWindow()
+        globe_3d_subwindow.setWindowTitle("Cesium Globe")
         
         # Create a QWebEngineView widget
-        self.webview = QWebEngineView()
-        subwindow.setWidget(self.webview)
-        
-        # remove padding and margin from the QWebEngineView widget
+        self.WebView3D = QWebEngineView()
+        globe_3d_subwindow.setWidget(self.WebView3D)
         
         # Load the CesiumJS webpage
-        self.webview.setHtml('''
+        self.WebView3D.setHtml('''
             <!DOCTYPE html>
             <html>
                 <head>
@@ -58,8 +49,6 @@ class MDI():
                             shouldAnimate: true,
                             homeButton: false,
                             navigationHelpButton: false,
-                            timeline: false,
-                            controls: false,
                         });
                         var dataSource = new Cesium.CzmlDataSource();
                         viewer.dataSources.add(dataSource);
@@ -71,8 +60,51 @@ class MDI():
             </html>
         ''')
         
-        # set cors policy
+        self.mdiArea.addSubWindow(globe_3d_subwindow)
         
         
-        # Add the QMdiSubWindow to the QMdiArea
-        self.mdiArea.addSubWindow(subwindow)
+        # 2D Globe sub window
+        globe_2d_subwindow = QMdiSubWindow()
+        globe_2d_subwindow.setWindowTitle("2D Globe")
+        
+        # Create a QWebEngineView widget
+        self.WebView2D = QWebEngineView()
+        globe_2d_subwindow.setWidget(self.WebView2D)
+        
+        # Load the CesiumJS webpage
+        self.WebView2D.setHtml('''
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <title>Cesium Globe</title>
+                    <link href="https://cdnjs.cloudflare.com/ajax/libs/cesium/1.103.0/Widgets/widgets.min.css" rel="stylesheet">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/cesium/1.103.0/Cesium.js"></script>
+                    <style>
+                        body {
+                            margin: 0;
+                            padding: 0;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div id="cesiumContainer" style="height: 100vh !important;"></div>
+                    <script> 
+                        const viewer = new Cesium.Viewer("cesiumContainer", {
+                            shouldAnimate: true,
+                            homeButton: false,
+                            navigationHelpButton: false,
+                            sceneMode: Cesium.SceneMode.SCENE2D,
+                        });
+                        var dataSource = new Cesium.CzmlDataSource();
+                        viewer.dataSources.add(dataSource);
+                        var proxy = "https://cors-anywhere.herokuapp.com/";
+                        var czmlUrl = proxy + "https://sandcastle.cesium.com/SampleData/simple.czml";
+                        dataSource.load(czmlUrl);
+                    </script>
+                </body>
+            </html>
+        ''')
+        
+        self.mdiArea.addSubWindow(globe_2d_subwindow)
+
+       
