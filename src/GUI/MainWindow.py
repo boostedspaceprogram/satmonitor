@@ -1,7 +1,6 @@
 from PyQt5.QtCore import *
 from GUI.Ribbon.RibbonButton import RibbonButton
 from GUI.Ribbon.Icons import get_icon
-from GUI.Ribbon.RibbonTextbox import RibbonTextbox
 from GUI.Ribbon.RibbonWidget import *
 from GUI.StatusBar import StatusBar
 from GUI.MDI import MDI
@@ -34,6 +33,7 @@ class MainWindow(QMainWindow):
         self.consoleDock.setAllowedAreas(Qt.BottomDockWidgetArea | Qt.TopDockWidgetArea | Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
         self.consoleDock.setWidget(self.console.console)
         self.addDockWidget(Qt.BottomDockWidgetArea, self.consoleDock)
+        self.consoleDock.setTitleBarWidget(QWidget())
         self.consoleDock.hide()
         
         # -------------        actions       -----------------
