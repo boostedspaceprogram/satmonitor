@@ -1,7 +1,6 @@
-from PyQt5.QtWidgets import QMdiArea, QMdiSubWindow, QTextEdit
-from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtWidgets import QMdiArea, QMdiSubWindow, QTextEdit, QLabel
+from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile
 import folium
-
 
 class MDI():
     
@@ -28,19 +27,52 @@ class MDI():
         sub.show()
         
         
-        # Map sub window
-        sub_window = QMdiSubWindow()
-        folium_map = folium.Map(
-            location=[45.372, -121.6972],
-            zoom_start=1,
-            tiles='http://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}&s=Ga',
-            attr='Google Imagery',
-        )
-        web_view = QWebEngineView()
+        subwindow = QMdiSubWindow()
+        subwindow.setWindowTitle("Cesium Globe")
         
-        # web view no borders or scroll bars
-        web_view.setContentsMargins(0, 0, 0, 0)
-        web_view.setHtml(folium_map._repr_html_())
-        sub_window.setWidget(web_view)
-        self.mdiArea.addSubWindow(sub_window)
-        sub_window.show()
+        # Create a QWebEngineView widget
+        self.webview = QWebEngineView()
+        subwindow.setWidget(self.webview)
+        
+        # remove padding and margin from the QWebEngineView widget
+        
+        # Load the CesiumJS webpage
+        self.webview.setHtml('''
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <title>Cesium Globe</title>
+                    <link href="https://cdnjs.cloudflare.com/ajax/libs/cesium/1.103.0/Widgets/widgets.min.css" rel="stylesheet">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/cesium/1.103.0/Cesium.js"></script>
+                    <style>
+                        body {
+                            margin: 0;
+                            padding: 0;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div id="cesiumContainer" style="height: 100vh !important;"></div>
+                    <script> 
+                        const viewer = new Cesium.Viewer("cesiumContainer", {
+                            shouldAnimate: true,
+                            homeButton: false,
+                            navigationHelpButton: false,
+                            timeline: false,
+                            controls: false,
+                        });
+                        var dataSource = new Cesium.CzmlDataSource();
+                        viewer.dataSources.add(dataSource);
+                        var proxy = "https://cors-anywhere.herokuapp.com/";
+                        var czmlUrl = proxy + "https://sandcastle.cesium.com/SampleData/simple.czml";
+                        dataSource.load(czmlUrl);
+                    </script>
+                </body>
+            </html>
+        ''')
+        
+        # set cors policy
+        
+        
+        # Add the QMdiSubWindow to the QMdiArea
+        self.mdiArea.addSubWindow(subwindow)
