@@ -34,7 +34,7 @@ class Console():
         self.console.setStyleSheet("background-color: " + self.conBgColor + "; color: " + self.conTextColor + "; font-size: " + str(self.conTextSize) + "pt; font-family: 'Courier New';")
         
         # Console message
-        self.log("Console class initialization", "info")
+        self.log(f"{__class__.__name__} initialization", "info")
     
     def checkTypes(self, types):
         # Check if given type is valid and return True or False
