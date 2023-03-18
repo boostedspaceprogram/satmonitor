@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QMdiArea, QMdiSubWindow, QTextEdit
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from Functions.Globe import Globe
+from Functions.Livestream import Livestream
 
 class MDI():
     
@@ -14,12 +15,13 @@ class MDI():
         self.console.log(f"{__class__.__name__} initialization", "info")
         
         # MDI initialization/properties
-        self.mdiArea = QMdiArea() 
+        self.mdiArea = QMdiArea()
         
-        # Status bar widget
         self.Globe3D()
         
         self.Globe2D()
+        
+        self.embedLivestream()
         
     def Globe3D(self):
         
@@ -50,7 +52,7 @@ class MDI():
             "shouldAnimate": True,
             "homeButton": False,
             "navigationHelpButton": False,
-            "sceneMode": "2D",
+            "sceneMode": "Cesium.SceneMode.SCENE2D",
         })
         
         # Globe sub window
@@ -65,4 +67,17 @@ class MDI():
         self.WebView2D.setHtml(self.globe2d.html_out())
         
         self.mdiArea.addSubWindow(globe_2d_subwindow)
+        
+    def embedLivestream(self):
+        # Livestream embed
+        self.liveStream = Livestream(self.console, "https://www.youtube.com/embed/4aMf9K_ZaAI?autoplay=1&mute=1")
+        self.liveStream = self.liveStream.LivestreamView()
+        
+        # Create a QMdiSubWindow widget
+        self.subWindow = QMdiSubWindow()
+        self.subWindow.setWindowTitle("Live Stream")
+        self.subWindow.setWidget(self.liveStream)
+        
+        # Add the QMdiSubWindow widget to the QMdiArea widget
+        self.mdiArea.addSubWindow(self.subWindow)
        
