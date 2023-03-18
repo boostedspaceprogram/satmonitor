@@ -27,8 +27,6 @@ class Globe():
         # Convert Python dict to JSON
         self.properties = json.dumps(self.properties, indent=4, sort_keys=True, default=int, ensure_ascii=False)
         
-        print(self.properties)
-        
         html = f'''
             <!DOCTYPE html>
             <html>
