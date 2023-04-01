@@ -12,11 +12,10 @@ class StatusBar():
         self.console = console
                 
         # Console message
-        self.console.log("StatusBar class initialization", "info")
+        self.console.log(f"{__class__.__name__} initialization", "info")
         
         # Status bar initailization/properties
         self.statusBar = QStatusBar()
-        self.statusBar.setObjectName("statusBar")
         self.statusBar.setStyleSheet("QStatusBar::item { border: 0px solid black; }")
         self.statusBar.setSizeGripEnabled(False)
         self.statusBar.setFixedHeight(20)

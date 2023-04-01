@@ -1,7 +1,6 @@
 from PyQt5.QtCore import *
 from GUI.Ribbon.RibbonButton import RibbonButton
 from GUI.Ribbon.Icons import get_icon
-from GUI.Ribbon.RibbonTextbox import RibbonTextbox
 from GUI.Ribbon.RibbonWidget import *
 from GUI.StatusBar import StatusBar
 from GUI.MDI import MDI
@@ -34,6 +33,7 @@ class MainWindow(QMainWindow):
         self.consoleDock.setAllowedAreas(Qt.BottomDockWidgetArea | Qt.TopDockWidgetArea | Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
         self.consoleDock.setWidget(self.console.console)
         self.addDockWidget(Qt.BottomDockWidgetArea, self.consoleDock)
+        self.consoleDock.setTitleBarWidget(QWidget())
         self.consoleDock.hide()
         
         # -------------        actions       -----------------
@@ -50,6 +50,9 @@ class MainWindow(QMainWindow):
         self._open_console = self.add_action("Open console", "console", "Open console", True, self.on_open_console)
         self._close_console = self.add_action("Close console", "console", "Close console", True, self.on_close_console)
         self._close_console.setEnabled(False)
+        
+        # Satellite tab
+        self._open_tle_view = self.add_action("TLE View", "tle_view", "Open TLE View", True, self.on_open_tle_view)
 
         # Ribbon
         self._ribbon = RibbonWidget(self)
@@ -95,7 +98,16 @@ class MainWindow(QMainWindow):
         console_pane = system_tab.add_ribbon_pane("Console")
         console_pane.add_ribbon_widget(RibbonButton(self, self._open_console, True))
         console_pane.add_ribbon_widget(RibbonButton(self, self._close_console, True))
+        
+        satellite_tab = self._ribbon.add_ribbon_tab("Satellite")
+        satellite_pane = satellite_tab.add_ribbon_pane("Satellite")
+        satellite_pane.add_ribbon_widget(RibbonButton(self, self._open_tle_view, True))
+        
 
+    def on_open_tle_view(self):
+        self.console.log("TLE view opened", "debug")
+        self.mdiArea.TLEWindow().show()
+        
     def on_open_settings(self):
         pass
     

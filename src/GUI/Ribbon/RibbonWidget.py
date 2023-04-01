@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import *
 from GUI.Ribbon.RibbonTab import RibbonTab
 from GUI.Ribbon.StyleSheets import get_stylesheet
+from Functions.ScreenReziser import gui_scale
 
 class RibbonWidget(QToolBar):
     def __init__(self, parent):
@@ -9,8 +10,8 @@ class RibbonWidget(QToolBar):
         self.setObjectName("ribbonWidget")
         self.setWindowTitle("Ribbon")
         self._ribbon_widget = QTabWidget(self)
-        self._ribbon_widget.setMaximumHeight(120)
-        self._ribbon_widget.setMinimumHeight(110)
+        self._ribbon_widget.setMaximumHeight(120 * gui_scale())
+        self._ribbon_widget.setMinimumHeight(110 * gui_scale())
         self.setMovable(False)
         self.addWidget(self._ribbon_widget)
 
