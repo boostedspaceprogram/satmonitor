@@ -28,6 +28,7 @@ class Icons(object):
         self.make_icon("grid_close_all", "icons/grid_close_all.png")
         self.make_icon("alert", "icons/alert.png")
         self.make_icon("alert_mute", "icons/alert_mute.png")
+        self.make_icon("tle_view", "icons/tle_view.png")
         
         # Default fallback icon
         self.make_icon("default", "icons/default.png")

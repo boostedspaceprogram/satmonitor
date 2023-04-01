@@ -1,11 +1,13 @@
-from PyQt5.QtWidgets import QMdiArea, QMdiSubWindow, QTextEdit
+from PyQt5.QtWidgets import QMdiArea, QMdiSubWindow, QPushButton
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from Functions.Globe import Globe
 from Functions.Livestream import Livestream
+from Functions.TLE import TLE
 
 class MDI():
     
     console = None
+    mdiArea = None
     
     def __init__(self, console):
         # Console class
@@ -17,11 +19,13 @@ class MDI():
         # MDI initialization/properties
         self.mdiArea = QMdiArea()
         
-        self.Globe3D()
+        # self.Globe3D()
         
-        self.Globe2D()
+        # self.Globe2D()
         
-        self.embedLivestream()
+        # self.embedLivestream()
+        
+        # self.TLEWindow()
         
     def Globe3D(self):
         
@@ -81,3 +85,21 @@ class MDI():
         # Add the QMdiSubWindow widget to the QMdiArea widget
         self.mdiArea.addSubWindow(self.subWindow)
        
+    def TLEWindow(self):
+        # TLE data class
+        self.TLE = TLE(self.console, "https://celestrak.org/NORAD/elements/gp.php?GROUP=starlink&FORMAT=json")
+        self.TLE = self.TLE.TLETable()
+        
+        # Create a QMdiSubWindow widget
+        self.subWindow = QMdiSubWindow()
+        self.subWindow.setWindowTitle("TLE Data")
+        self.subWindow.resize(600, 500)
+        self.subWindow.setWidget(self.TLE)
+        
+        # Add the QMdiSubWindow widget to the QMdiArea widget
+        self.mdiArea.addSubWindow(self.subWindow)
+        
+        return self.subWindow
+        
+    
+        
