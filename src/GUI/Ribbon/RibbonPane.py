@@ -2,6 +2,7 @@ from PyQt5 import QtGui
 from PyQt5.Qt import Qt
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QGridLayout
 from GUI.Ribbon.StyleSheets import get_stylesheet
+from Functions.ScreenReziser import gui_scale
 
 class RibbonPane(QWidget):
     def __init__(self, parent, name):
@@ -49,8 +50,8 @@ class RibbonPane(QWidget):
 class RibbonSeparator(QWidget):
     def __init__(self, parent):
         QWidget.__init__(self, parent)
-        self.setMinimumHeight(80)
-        self.setMaximumHeight(80)
+        self.setMinimumHeight(80 * gui_scale())
+        self.setMaximumHeight(80 * gui_scale())
         self.setMinimumWidth(1)
         self.setMaximumWidth(1)
         self.setLayout(QHBoxLayout())
