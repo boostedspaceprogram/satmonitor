@@ -31,7 +31,7 @@ class MDI():
         
         # self.TLEWindow()
         
-        self.upcomingLaunchesWindow()
+        # self.upcomingLaunchesWindow()
         
     def Globe3D(self):
         
@@ -202,4 +202,36 @@ class MDI():
         self.mdiArea.addSubWindow(self.subWindow)
         self.subWindow.show()
         return self.subWindow
+    
+    def settingsWindow(self):
+        # Create a QMdiSubWindow widget
+        self.subWindow = QMdiSubWindow()
+        self.subWindow.setWindowTitle("Settings")
+        self.subWindow.resize(400, 300)
         
+        # create form
+        form = QWidget()
+        layout = QFormLayout(form)
+        form.setLayout(layout)
+
+        self.themeDropdown = QComboBox(form)
+        layout.addRow("Theme: ", self.themeDropdown)
+        
+        self.themeDropdown.addItem("Dark")
+        self.themeDropdown.addItem("Light")
+
+        saveBtnForm = QPushButton("Save")
+        saveBtnForm.clicked.connect(self.on_saveBtnForm_clicked)
+        layout.addRow(saveBtnForm)
+        
+        # Set form as sub window widget
+        self.subWindow.setWidget(form)
+        
+        # Add the QMdiSubWindow widget to the QMdiArea widget
+        self.mdiArea.addSubWindow(self.subWindow)
+        self.subWindow.show()
+        return self.subWindow
+    
+    def on_saveBtnForm_clicked(self):
+        self.console.log("Settings saved", "debug")
+        self.subWindow.close()

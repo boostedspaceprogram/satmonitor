@@ -115,6 +115,8 @@ class MainWindow(QMainWindow):
         self.mdiArea.upcomingLaunchesWindow().show()
         
     def on_open_settings(self):
+        self.console.log("Settings opened", "debug")
+        self.mdiArea.settingsWindow().show()
         pass
     
     def on_open_console(self):
