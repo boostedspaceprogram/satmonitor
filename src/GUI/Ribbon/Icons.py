@@ -29,6 +29,7 @@ class Icons(object):
         self.make_icon("alert", "icons/alert.png")
         self.make_icon("alert_mute", "icons/alert_mute.png")
         self.make_icon("tle_view", "icons/tle_view.png")
+        self.make_icon("upcoming_launches", "icons/tle_view.png")
         
         # Default fallback icon
         self.make_icon("default", "icons/default.png")

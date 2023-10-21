@@ -53,6 +53,7 @@ class MainWindow(QMainWindow):
         
         # Satellite tab
         self._open_tle_view = self.add_action("TLE View", "tle_view", "Open TLE View", True, self.on_open_tle_view)
+        self._open_upcoming_launches = self.add_action("Upcoming Launches", "default", "Open Upcoming Launches", True, self.on_open_upcoming_launches)
 
         # Ribbon
         self._ribbon = RibbonWidget(self)
@@ -102,11 +103,16 @@ class MainWindow(QMainWindow):
         satellite_tab = self._ribbon.add_ribbon_tab("Satellite")
         satellite_pane = satellite_tab.add_ribbon_pane("Satellite")
         satellite_pane.add_ribbon_widget(RibbonButton(self, self._open_tle_view, True))
+        satellite_pane.add_ribbon_widget(RibbonButton(self, self._open_upcoming_launches, True))
         
 
     def on_open_tle_view(self):
         self.console.log("TLE view opened", "debug")
         self.mdiArea.TLEWindow().show()
+        
+    def on_open_upcoming_launches(self):
+        self.console.log("Upcoming Launches opened", "debug")
+        self.mdiArea.upcomingLaunchesWindow().show()
         
     def on_open_settings(self):
         pass
