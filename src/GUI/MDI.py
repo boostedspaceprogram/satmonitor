@@ -194,8 +194,6 @@ class MDI():
                     mainWidgetItem = QTreeWidgetItem(self.treeWidget)
                     mainWidgetItem.setText(0, key)
                     mainWidgetItem.setText(1, str(value))
-                    
-            print(json.dumps(launchDetails["rocket"]["configuration"]["name"], indent=4, sort_keys=True))
         
         # show sub window 
         self.subWindow.setWidget(self.treeWidget)
