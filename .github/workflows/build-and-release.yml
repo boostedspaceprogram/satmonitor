@@ -1,0 +1,37 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main  # Change this to the branch you want to trigger the workflow on
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11.5
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Install PyInstaller
+      run: |
+        pip install pyinstaller
+
+    - name: Build with PyInstaller
+      run: |
+        pyinstaller --noconsole --onefile --name "Sat-Monitor" --add-data="src/GUI/Ribbon/icons;GUI/Ribbon/icons" --add-data="src/GUI/Ribbon/stylesheets;GUI/Ribbon/stylesheets" src/main.py
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: compiled-executable
+        path: dist
