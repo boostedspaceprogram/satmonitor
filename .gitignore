@@ -130,3 +130,6 @@ dmypy.json
 
 # Cache
 cache.sqlite
+
+# Settings file
+settings.json
