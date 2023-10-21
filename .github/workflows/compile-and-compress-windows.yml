@@ -26,11 +26,11 @@ jobs:
 
     - name: Get current timestamp
       id: timestamp
-      run: echo "::set-output name=timestamp::$(date +%Y%m%d%H%M%S)"
+      run: echo "::set-output name=timestamp::$(Get-Date -UFormat %Y%m%d%H%M%S)"
 
     - name: Build with PyInstaller
       run: |
-        BUILD_NUMBER=$(echo ${{ steps.timestamp.outputs.timestamp }})
+        $BUILD_NUMBER = $env:BUILD_NUMBER
         pyinstaller --noconsole --onefile --name "Sat-Monitor-$BUILD_NUMBER" --add-data="src/GUI/Ribbon/icons;GUI/Ribbon/icons" --add-data="src/GUI/Ribbon/stylesheets;GUI/Ribbon/stylesheets" src/main.py
 
     - name: Upload artifacts
