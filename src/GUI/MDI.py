@@ -1,9 +1,12 @@
-from PyQt5.QtWidgets import QMdiArea, QMdiSubWindow, QPushButton
+from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtCore import *
 from Functions.Globe import Globe
 from Functions.Livestream import Livestream
 from Functions.TLE import TLE
 from Functions.Requests import Requests
+
+import json, time
 
 class MDI():
     
@@ -106,18 +109,99 @@ class MDI():
     def upcomingLaunchesWindow(self):
         self.upcomingLaunches = Requests(self.console, "https://ll.thespacedevs.com/2.2.0/launch/upcoming/")
         self.upcomingLaunches.set_method("GET")
-        self.upcomingLaunches.set_headers({"User-Agent": "SpaceXplorer/1.0", "Accept": "application/json"})
-        self.upcomingLaunches = self.upcomingLaunches.make_requests()
+        self.upcomingLaunches.set_headers({"User-Agent": "SatMonitor/1.0", "Accept": "application/json"})
+        self.upcomingLaunchesData = self.upcomingLaunches.make_requests()
         
         # Create a QMdiSubWindow widget
         self.subWindow = QMdiSubWindow()
         self.subWindow.setWindowTitle("Upcoming Launches")
-        self.subWindow.resize(600, 500)
+        self.subWindow.resize(800, 300)
         
-        self.subWindow.setWidget(self.upcomingLaunches)
+        # Create a QTreeWidget widget 
+        self.treeWidget = QTreeWidget()
+        self.treeWidget.setAlternatingRowColors(True)
+        self.treeWidget.setHeaderHidden(False)
+        self.treeWidget.setSortingEnabled(True)
+        
+        # Set tree widget columns
+        if self.upcomingLaunchesData is not None:
+            self.subWindow.setWindowTitle("Upcoming Launches - " + str(len(self.upcomingLaunchesData["results"])) + " results")
+            self.treeWidget.setColumnCount(6)
+            self.treeWidget.setHeaderLabels(["Rocket", "Mission", "Net", "Status", "Pad", "Location"])
+        else:
+            self.treeWidget.setColumnCount(1)
+            self.treeWidget.setHeaderLabels(["Error"])
+        
+        # sort by column 2 'Net' ascending
+        if self.upcomingLaunchesData is not None:
+            self.treeWidget.sortByColumn(2, Qt.AscendingOrder)
+        
+        # fit column 'Rocket', 'Mission', 'Net' and 'Status' to full width
+        if self.upcomingLaunchesData is not None:
+            self.treeWidget.header().setSectionResizeMode(0, QHeaderView.ResizeToContents)
+            self.treeWidget.header().setSectionResizeMode(1, QHeaderView.ResizeToContents)
+            self.treeWidget.header().setSectionResizeMode(2, QHeaderView.ResizeToContents)
+            self.treeWidget.header().setSectionResizeMode(3, QHeaderView.ResizeToContents)
+        
+        # Add data to main tree widget
+        if self.upcomingLaunchesData is not None:
+            for launch in self.upcomingLaunchesData["results"]:
+                mainWidgetItem = QTreeWidgetItem(self.treeWidget)
+                
+                # Add data to main widget item columns
+                mainWidgetItem.setText(0, launch["rocket"]["configuration"]["name"])
+                mainWidgetItem.setText(1, launch["mission"]["name"])
+                mainWidgetItem.setText(2, launch["net"])
+                mainWidgetItem.setText(3, launch["status"]["name"])
+                mainWidgetItem.setText(4, launch["pad"]["name"])
+                mainWidgetItem.setText(5, launch["pad"]["location"]["name"])
+                
+                # Add double click event to main widget item
+                mainWidgetItem.setFlags(mainWidgetItem.flags() | Qt.ItemIsSelectable | Qt.ItemIsEnabled)     
+        else:
+            mainWidgetItemNoData = QTreeWidgetItem(self.treeWidget)
+            mainWidgetItemNoData.setText(0, "No data available from API, please try again later.")
+            
+        # Add double click event on any tree widget item
+        self.treeWidget.itemDoubleClicked.connect(self.on_treeWidget_itemDoubleClicked)
+        
+        # Set tree widget as sub window widget
+        self.subWindow.setWidget(self.treeWidget)
         
         # Add the QMdiSubWindow widget to the QMdiArea widget
         self.mdiArea.addSubWindow(self.subWindow)
         return self.subWindow
-    
+
+    def on_treeWidget_itemDoubleClicked(self, item):
+        # Create a QMdiSubWindow widget
+        self.subWindow = QMdiSubWindow()
+        self.subWindow.setWindowTitle("Upcoming Launches Details - " + item.text(1))
+        self.subWindow.resize(400, 300)
+        
+        # Create a QTreeWidget widget
+        self.treeWidget = QTreeWidget()
+        self.treeWidget.setAlternatingRowColors(True)
+        self.treeWidget.setHeaderHidden(False)
+        
+        # Set tree widget columns
+        self.treeWidget.setColumnCount(2)
+        self.treeWidget.setHeaderLabels(["Info", "Value"])
+        
+        # loop trough data and add to tree widget
+        for launchDetails in self.upcomingLaunchesData["results"]:
+            if launchDetails["rocket"]["configuration"]["name"] == item.text(0) and launchDetails["mission"]["name"] == item.text(1):
+                for key, value in launchDetails.items():
+                    mainWidgetItem = QTreeWidgetItem(self.treeWidget)
+                    mainWidgetItem.setText(0, key)
+                    mainWidgetItem.setText(1, str(value))
+                    
+            print(json.dumps(launchDetails["rocket"]["configuration"]["name"], indent=4, sort_keys=True))
+        
+        # show sub window 
+        self.subWindow.setWidget(self.treeWidget)
+        
+        # Add the QMdiSubWindow widget to the QMdiArea widget
+        self.mdiArea.addSubWindow(self.subWindow)
+        self.subWindow.show()
+        return self.subWindow
         
