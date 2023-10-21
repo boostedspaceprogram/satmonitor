@@ -22,6 +22,7 @@ Here is a list of the features that we want to implement in the application. Whe
 - [ ] Controls for the visualization (zoom, rotate, etc.)
 - [ ] Display of the satellites' telemetry data (altitude, velocity, etc.)
 - [ ] Display of the satellites' images and 3D models (if available)
+
 #### SHOULD HAVE
 - Ability to view ongoing and upcoming missions and their details
 - Live video feed of ongoing missions (if available)
