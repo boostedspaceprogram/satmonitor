@@ -3,6 +3,7 @@ from PyQt5.QtWebEngineWidgets import QWebEngineView
 from Functions.Globe import Globe
 from Functions.Livestream import Livestream
 from Functions.TLE import TLE
+from Functions.Requests import Requests
 
 class MDI():
     
@@ -26,6 +27,8 @@ class MDI():
         # self.embedLivestream()
         
         # self.TLEWindow()
+        
+        self.upcomingLaunchesWindow()
         
     def Globe3D(self):
         
@@ -98,8 +101,23 @@ class MDI():
         
         # Add the QMdiSubWindow widget to the QMdiArea widget
         self.mdiArea.addSubWindow(self.subWindow)
-        
         return self.subWindow
         
+    def upcomingLaunchesWindow(self):
+        self.upcomingLaunches = Requests(self.console, "https://ll.thespacedevs.com/2.2.0/launch/upcoming/")
+        self.upcomingLaunches.set_method("GET")
+        self.upcomingLaunches.set_headers({"User-Agent": "SpaceXplorer/1.0", "Accept": "application/json"})
+        self.upcomingLaunches = self.upcomingLaunches.make_requests()
+        
+        # Create a QMdiSubWindow widget
+        self.subWindow = QMdiSubWindow()
+        self.subWindow.setWindowTitle("Upcoming Launches")
+        self.subWindow.resize(600, 500)
+        
+        self.subWindow.setWidget(self.upcomingLaunches)
+        
+        # Add the QMdiSubWindow widget to the QMdiArea widget
+        self.mdiArea.addSubWindow(self.subWindow)
+        return self.subWindow
     
         
