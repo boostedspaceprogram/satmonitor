@@ -1,13 +1,11 @@
-name: Build and Release
+name: Compile & Compress - Windows
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - name: Checkout code
@@ -33,7 +31,7 @@ jobs:
     - name: Build with PyInstaller
       run: |
         BUILD_NUMBER=$(echo ${{ steps.timestamp.outputs.timestamp }})
-        pyinstaller --noconsole --onefile --name "Sat-Monitor-$BUILD_NUMBER" --add-data="src/GUI/Ribbon/icons:GUI/Ribbon/icons" --add-data="src/GUI/Ribbon/stylesheets:GUI/Ribbon/stylesheets" src/main.py
+        pyinstaller --noconsole --onefile --name "Sat-Monitor-$BUILD_NUMBER" --add-data="src/GUI/Ribbon/icons;GUI/Ribbon/icons" --add-data="src/GUI/Ribbon/stylesheets;GUI/Ribbon/stylesheets" src/main.py
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
