@@ -5,17 +5,22 @@ from Functions.Globe import Globe
 from Functions.Livestream import Livestream
 from Functions.TLE import TLE
 from Functions.Requests import Requests
+from Functions.Settings import Settings
 
-import json, time
+import os, sys, json, time
 
 class MDI():
     
     console = None
     mdiArea = None
+    settings = None
     
     def __init__(self, console):
         # Console class
         self.console = console
+        
+        # Settings class
+        self.settings = Settings(self.console)
         
         # Console message
         self.console.log(f"{__class__.__name__} initialization", "info")
@@ -217,8 +222,34 @@ class MDI():
         self.themeDropdown = QComboBox(form)
         layout.addRow("Theme: ", self.themeDropdown)
         
-        self.themeDropdown.addItem("Dark")
-        self.themeDropdown.addItem("Light")
+        themes = [
+            'dark_amber.xml',
+            'dark_blue.xml',
+            'dark_cyan.xml',
+            'dark_lightgreen.xml',
+            'dark_pink.xml',
+            'dark_purple.xml',
+            'dark_red.xml',
+            'dark_teal.xml',
+            'dark_yellow.xml',
+            'light_amber.xml',
+            'light_blue.xml',
+            'light_cyan.xml',
+            'light_cyan_500.xml',
+            'light_lightgreen.xml',
+            'light_pink.xml',
+            'light_purple.xml',
+            'light_red.xml',
+            'light_teal.xml',
+            'light_yellow.xml'
+        ]
+        
+        # add themes to dropdown list
+        for theme in themes:
+            self.themeDropdown.addItem(theme)
+            
+        # select current theme from settings file
+        self.themeDropdown.setCurrentText(self.settings.get_settings()["theme"])
 
         saveBtnForm = QPushButton("Save")
         saveBtnForm.clicked.connect(self.on_saveBtnForm_clicked)
@@ -234,4 +265,9 @@ class MDI():
     
     def on_saveBtnForm_clicked(self):
         self.console.log("Settings saved", "debug")
-        self.subWindow.close()
+        
+        # Save settings 
+        self.settings.set_settings("theme", self.themeDropdown.currentText())
+        
+        # Restart application to apply new theme
+        os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
