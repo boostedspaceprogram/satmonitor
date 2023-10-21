@@ -12,7 +12,8 @@ class Console():
     
     # Console types
     errTypes = ["error", "warning", "info", "debug"]
-    errColors = ["red", "yellow", "lightblue", "purple"]
+    errTypesColors = ["red", "yellow", "white", "purple"]
+    errColors = ["red", "yellow", "white", "green"]
     
     # Console options
     prependDateTime = True # True = prepend date and time to message, False = don't prepend date and time to message
@@ -50,8 +51,9 @@ class Console():
         else:
             if self.errTypes.index(type) <= self.doNotShowLogAfterType:
                 if self.prependDateTime:
+                    typeColor = self.errTypesColors[self.errTypes.index(type)]
                     color = self.errColors[self.errTypes.index(type)]
-                    self.console.append(time.strftime("%d/%m/%Y %H:%M:%S") + " <font color='" + color + "'>[" + type.upper() + "]</font> - " + text)
+                    self.console.append(time.strftime("%d/%m/%Y %H:%M:%S") + " <font color='" + typeColor + "'>[" + type.upper() + "]</font> <font color='" + color + "'>" + text + "</font>")
                 else:
                     self.console.append("[" + type.upper() + "] - " + text)
         
