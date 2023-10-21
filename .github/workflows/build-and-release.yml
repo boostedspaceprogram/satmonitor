@@ -3,7 +3,7 @@ name: Build and Release
 on:
   push:
     branches:
-      - main  # Change this to the branch you want to trigger the workflow on
+      - main
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.11.5
+        python-version: 3.x
 
     - name: Install dependencies
       run: |
@@ -26,9 +26,14 @@ jobs:
       run: |
         pip install pyinstaller
 
+    - name: Get current timestamp
+      id: timestamp
+      run: echo "::set-output name=timestamp::$(date +%Y%m%d%H%M%S)"
+
     - name: Build with PyInstaller
       run: |
-        pyinstaller --noconsole --onefile --name "Sat-Monitor" --add-data="src/GUI/Ribbon/icons;GUI/Ribbon/icons" --add-data="src/GUI/Ribbon/stylesheets;GUI/Ribbon/stylesheets" src/main.py
+        BUILD_NUMBER=$(echo ${{ steps.timestamp.outputs.timestamp }})
+        pyinstaller --noconsole --onefile --name "Sat-Monitor-$BUILD_NUMBER" --add-data="src/GUI/Ribbon/icons:GUI/Ribbon/icons" --add-data="src/GUI/Ribbon/stylesheets:GUI/Ribbon/stylesheets" src/main.py
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
