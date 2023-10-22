@@ -112,10 +112,30 @@ class Console():
                 typeColor = self.errTypesColors[self.errTypes.index(type)]
                 color = self.errColors[self.errTypes.index(type)]
                 if self.prependDateTime:
+                    
+                    #loop trough message and check if there is a new line '<br/>' or '<br />' and place the date and time before it 
+                    if "<br/>" in text or "<br />" in text:
+                        text = text.replace("<br />", "<br/>")
+                        text = text.split("<br/>")
+                        
+                        # Add date and time to each line
+                        for i in range(len(text)):
+                            if i != 0:
+                                text[i] = time.strftime("%d/%m/%Y %H:%M:%S") + " <font color='" + typeColor + "'>[" + type.upper() + "]</font> <font color='" + color + "'>" + text[i] + "</font>"
+                            else:
+                                text[i] = " <font color='" + typeColor + "'>[" + type.upper() + "]</font> <font color='" + color + "'>" + text[i] + "</font>"
+                            if i < len(text):
+                                text[i] = text[i] + "<br/>"
+                            
+                        # Join list to string
+                        text = "".join(text)
+                    else:
+                        text = " <font color='" + typeColor + "'>[" + type.upper() + "]</font> <font color='" + color + "'>" + text + "</font>"
+                    
                     # Add message to consoleLogMessages list
                     self.consoleLogMessages.append({
                         "type": type,
-                        "text": " <font color='" + typeColor + "'>[" + type.upper() + "]</font> <font color='" + color + "'>" + text + "</font>",
+                        "text": text,
                         "time": time.strftime("%d/%m/%Y %H:%M:%S"),
                         "appendTime": self.prependDateTime
                     })
@@ -168,7 +188,7 @@ class Console():
             for message in self.consoleLogMessages:
                 if message["type"] == filter:
                     if message["appendTime"]:
-                        unfilteredTimeMessages.append(message["time"] + message["text"])
+                        unfilteredTimeMessages.append(message["time"] + " " + message["text"])
                     else:
                         unfilteredTimeMessages.append(message["text"])
                         
