@@ -24,7 +24,7 @@ class Settings:
             "created_at": time.time(),
             "theme": "default",
         }
-        self.saveSettingsFile(json.dumps(jsonSettings))
+        self.saveSettingsFile(jsonSettings)
         
     def loadSettingsFile(self):
         # Load settings.json file
@@ -32,20 +32,29 @@ class Settings:
         with open("settings.json", "r") as f:
             return json.load(f)
     
-    def saveSettingsFile(self, json): 
+    def saveSettingsFile(self, jsonSettings): 
         # open file in write mode and write json
         self.console.log(f"{__class__.__name__} file saved", "debug")
+        pretty_json = json.dumps(jsonSettings, indent=4, sort_keys=True)
         with open("settings.json", "w") as f:
-            f.write(json)
+            f.write(pretty_json)
             
     def get_settings_full(self):
         return self.loadSettingsFile()
     
     def get_settings(self, key):
-        return self.loadSettingsFile()[key]
+        jsonSettings = self.get_settings_full()
+        if jsonSettings is not None and key in jsonSettings:
+            return jsonSettings[key]
+        else:
+            return {}
     
     def set_settings(self, key, value):
         jsonSettings = self.get_settings_full()
-        jsonSettings[key] = value
-        self.saveSettingsFile(json.dumps(jsonSettings))
+        if jsonSettings is not None:
+            if value == "":
+                jsonSettings[key] = {}
+            else:
+                jsonSettings[key] = value
+            self.saveSettingsFile(jsonSettings)
             

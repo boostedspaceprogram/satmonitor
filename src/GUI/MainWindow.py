@@ -148,7 +148,7 @@ class MainWindow(QMainWindow):
         self.mdiArea.mdiArea.closeAllSubWindows()
         
     def on_alert(self):
-        pass
+        self.mdiArea.alertWindow().show()
 
     def on_alert_mute(self):
         pass

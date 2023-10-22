@@ -8,13 +8,14 @@ from Functions.Requests import Requests
 from Functions.Settings import Settings
 from Functions.UserNotificationProvider import UserNotificationProvider
 
-import os, sys, json, time
+import os, sys
 
 class MDI():
     
     console = None
     mdiArea = None
     settings = None
+    userNotificationProvider = None
     
     def __init__(self, console):
         # Console class
@@ -29,6 +30,9 @@ class MDI():
         # MDI initialization/properties
         self.mdiArea = QMdiArea()
         
+        # User notification provider
+        self.userNotificationProvider = UserNotificationProvider(self.console)
+        
         # self.Globe3D()
         
         # self.Globe2D()
@@ -38,19 +42,6 @@ class MDI():
         # self.TLEWindow()
         
         # self.upcomingLaunchesWindow()
-        
-        # userNotify = UserNotificationProvider(self.console, {
-        #     "telegram": {
-        #         "chat_id": "5562501065",
-        #         "bot_token": "6392270508:AAFeEnnu3ukHnEFAT6dR540s_TQixXr-qbk"
-        #     },
-        #     "discord": {
-        #         "webhook_url": "https://discord.com/api/webhooks/1165673654546350240/IN_vTY7lTvzRUNjS68sr7goALne78LrKYTksnHawpnJ96FLbylnnYvHgVKvGdK3MocLO"
-        #     },
-        #     "ntfy.sh": {
-        #         "webhook_url": "https://ntfy.sh/pvBEFuX4SIRbKGnP"
-        #     }
-        # })
         
     def Globe3D(self):
         
@@ -135,6 +126,8 @@ class MDI():
         self.subWindow = QMdiSubWindow()
         self.subWindow.setWindowTitle("Upcoming Launches")
         self.subWindow.resize(800, 300)
+        
+        self.userNotificationProvider.send_notification("telegram", "test")
         
         # Create a QTreeWidget widget 
         self.treeWidget = QTreeWidget()
@@ -267,7 +260,7 @@ class MDI():
         self.themeDropdown.setCurrentText(self.settings.get_settings('theme'))
 
         saveBtnForm = QPushButton("Save")
-        saveBtnForm.clicked.connect(self.on_saveBtnForm_clicked)
+        saveBtnForm.clicked.connect(self.on_settingsFormSave_clicked)
         layout.addRow(saveBtnForm)
         
         # Set form as sub window widget
@@ -278,7 +271,7 @@ class MDI():
         self.subWindow.show()
         return self.subWindow
     
-    def on_saveBtnForm_clicked(self):
+    def on_settingsFormSave_clicked(self):
         self.console.log("Settings saved", "debug")
         
         # Save settings 
@@ -286,3 +279,151 @@ class MDI():
         
         # Restart application to apply new theme
         os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
+        
+    def alertWindow(self):
+        
+        # Create a QMdiSubWindow widget
+        self.subWindow = QMdiSubWindow()
+        self.subWindow.setWindowTitle("Alerts")
+        self.subWindow.resize(500, 400)
+        
+        # create form
+        self.alertForm = QWidget()
+        layout = QFormLayout(self.alertForm)
+        self.alertForm.setLayout(layout)
+        
+        # title
+        title = QLabel("Alerts", self.alertForm)
+        title.setStyleSheet("font-size: 20px; font-weight: bold;")
+        self.alertForm.layout().addWidget(title)
+        
+        # description
+        description = QLabel("If you want to receive alerts, fill the required fields below.", self.alertForm)
+        self.alertForm.layout().addWidget(description)
+        
+        # Telegram group box
+        self.telegramGroupBox()
+        
+        # Discord group box
+        self.discordGroupBox()
+        
+        # Ntfy.sh group box
+        self.ntfyshGroupBox()
+
+        # add save button down below the form
+        saveBtnForm = QPushButton("Save")
+        saveBtnForm.clicked.connect(self.on_alertFormSave_clicked)
+        self.alertForm.layout().addWidget(saveBtnForm)
+        
+        # Set form as sub window widget
+        self.subWindow.setWidget(self.alertForm)
+        
+        # Add the QMdiSubWindow widget to the QMdiArea widget
+        self.mdiArea.addSubWindow(self.subWindow)
+        self.subWindow.show()
+        return self.subWindow
+    
+    def on_alertFormSave_clicked(self):
+        self.console.log("Alerts saved", "debug")
+        
+        # Save settings
+        self.settings.set_settings("notifications", {
+            "telegram": {
+                "enabled": self.telegramBox.isChecked(),
+                "chat_id": self.telegramChatIdInput.text(),
+                "bot_token": self.telegramTokenInput.text()
+            },
+            "discord": {
+                "enabled": self.discordBox.isChecked(),
+                "webhook_url": self.discordWebhookInput.text()
+            },
+            "ntfy.sh": {
+                "enabled": self.ntfyBox.isChecked(),
+                "webhook_url": self.ntfyWebhookInput.text()
+            }
+        })
+        
+        self.userNotificationProvider = UserNotificationProvider(self.console)
+        
+        # show popup QMessageBox
+        self.QMessageBox = QMessageBox()
+        self.QMessageBox.setWindowTitle("Alerts")
+        self.QMessageBox.setText("Saved successfully")
+        self.QMessageBox.setIcon(QMessageBox.Information)
+        self.QMessageBox.setStandardButtons(QMessageBox.Ok)
+        self.QMessageBox.show()
+        
+    def telegramGroupBox(self):
+        # Telegram Box
+        self.telegramBox = QGroupBox("Telegram", self.alertForm)
+        self.telegramBox.setCheckable(True)  
+        notifications = self.settings.get_settings("notifications")
+        self.telegramBox.setChecked(notifications.get("telegram", {}).get("enabled", False))
+        self.telegramBox.setStyleSheet("font-weight: bold;")
+        telegramBoxLayout = QVBoxLayout()
+        self.telegramBox.setLayout(telegramBoxLayout)
+        self.alertForm.layout().addWidget(self.telegramBox)
+        
+        # Telegram Chat ID
+        telegramLayout = QHBoxLayout()
+        telegramBoxLayout.addLayout(telegramLayout)
+        telegramChatIdLabel = QLabel("chat_id: ", self.telegramBox)
+        telegramLayout.addWidget(telegramChatIdLabel)
+        self.telegramChatIdInput = QLineEdit(self.alertForm)
+        self.telegramChatIdInput.setPlaceholderText("123456789")
+        self.telegramChatIdInput.setText(notifications.get("telegram", {}).get("chat_id", ""))
+        telegramLayout.addWidget(self.telegramChatIdInput)
+        
+        # Telegram Token
+        telegramTokenLayout = QHBoxLayout()
+        telegramBoxLayout.addLayout(telegramTokenLayout)
+        telegramTokenLabel = QLabel("bot_token: ", self.telegramBox)
+        telegramTokenLayout.addWidget(telegramTokenLabel)
+        self.telegramTokenInput = QLineEdit(self.alertForm)
+        self.telegramTokenInput.setPlaceholderText("123456789:ABCdefGHIjklMNoPQrSTUvWxYZ")
+        self.telegramTokenInput.setText(notifications.get("telegram", {}).get("bot_token", ""))
+        telegramTokenLayout.addWidget(self.telegramTokenInput)
+    
+    def discordGroupBox(self):
+        # Discord webhook URL Box
+        self.discordBox = QGroupBox("Discord", self.alertForm)
+        self.discordBox.setCheckable(True)
+        notifications = self.settings.get_settings("notifications")
+        self.discordBox.setChecked(notifications.get("discord", {}).get("enabled", False))
+        self.discordBox.setStyleSheet("font-weight: bold;")
+        discordBoxLayout = QVBoxLayout()
+        self.discordBox.setLayout(discordBoxLayout)
+        self.alertForm.layout().addWidget(self.discordBox)
+        
+        # Discord webhook URL
+        discordWebhookLayout = QHBoxLayout()
+        discordBoxLayout.addLayout(discordWebhookLayout)
+        discordWebhookLabel = QLabel("webhook_url: ", self.discordBox)
+        discordBoxLayout.addWidget(discordWebhookLabel)
+        self.discordWebhookInput = QLineEdit(self.alertForm)
+        self.discordWebhookInput.setPlaceholderText("https://discord.com/api/webhooks/123456789/ABCdefGHIjklMNoPQrSTUvWxYZ")
+        self.discordWebhookInput.setText(notifications.get("discord", {}).get("webhook_url", ""))
+        discordBoxLayout.addWidget(self.discordWebhookInput)
+        
+    def ntfyshGroupBox(self):
+        # Discord webhook URL Box
+        self.ntfyBox = QGroupBox("Ntfy.sh", self.alertForm)
+        self.ntfyBox.setCheckable(True)
+        notifications = self.settings.get_settings("notifications")
+        self.ntfyBox.setChecked(notifications.get("ntfy.sh", {}).get("enabled", False))
+        self.ntfyBox.setStyleSheet("font-weight: bold;")
+        ntfyBoxLayout = QVBoxLayout()
+        self.ntfyBox.setLayout(ntfyBoxLayout)
+        self.alertForm.layout().addWidget(self.ntfyBox)
+        
+        # Ntfy.sh webhook URL
+        ntfyWebhookLayout = QHBoxLayout()
+        ntfyBoxLayout.addLayout(ntfyWebhookLayout)
+        ntfyWebhookLabel = QLabel("webhook_url: ", self.ntfyBox)
+        ntfyBoxLayout.addWidget(ntfyWebhookLabel)
+        self.ntfyWebhookInput = QLineEdit(self.alertForm)
+        self.ntfyWebhookInput.setPlaceholderText("https://notify.run/123456789")
+        self.ntfyWebhookInput.setText(notifications.get("ntfy.sh", {}).get("webhook_url", ""))
+        ntfyBoxLayout.addWidget(self.ntfyWebhookInput)
+        
+       
