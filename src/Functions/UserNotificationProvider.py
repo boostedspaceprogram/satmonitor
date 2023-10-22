@@ -2,8 +2,6 @@ from Notifications.TelegramNotificationProvider import TelegramNotificationProvi
 from Notifications.NtfyNotificationProvider import NtfyNotificationProvider
 from Notifications.DiscordNotificationProvider import DiscordNotificationProvider
 
-from GUI.Console import Console
-
 class UserNotificationProvider():
     
     # Console 
