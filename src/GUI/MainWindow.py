@@ -31,7 +31,7 @@ class MainWindow(QMainWindow):
         # create bottom dock widget and add console to it
         self.consoleDock = QDockWidget("Console", self)
         self.consoleDock.setAllowedAreas(Qt.BottomDockWidgetArea | Qt.TopDockWidgetArea | Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
-        self.consoleDock.setWidget(self.console.console)
+        self.consoleDock.setWidget(self.console.gridWidget)
         self.addDockWidget(Qt.BottomDockWidgetArea, self.consoleDock)
         self.consoleDock.setTitleBarWidget(QWidget())
         self.consoleDock.hide()
