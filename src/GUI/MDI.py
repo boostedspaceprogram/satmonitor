@@ -223,6 +223,7 @@ class MDI():
         layout.addRow("Theme: ", self.themeDropdown)
         
         themes = [
+            'default',
             'dark_amber.xml',
             'dark_blue.xml',
             'dark_cyan.xml',
