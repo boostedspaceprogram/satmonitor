@@ -6,6 +6,7 @@ from Functions.Livestream import Livestream
 from Functions.TLE import TLE
 from Functions.Requests import Requests
 from Functions.Settings import Settings
+from Functions.UserNotificationProvider import UserNotificationProvider
 
 import os, sys, json, time
 
@@ -37,6 +38,19 @@ class MDI():
         # self.TLEWindow()
         
         # self.upcomingLaunchesWindow()
+        
+        # userNotify = UserNotificationProvider(self.console, {
+        #     "telegram": {
+        #         "chat_id": "5562501065",
+        #         "bot_token": "6392270508:AAFeEnnu3ukHnEFAT6dR540s_TQixXr-qbk"
+        #     },
+        #     "discord": {
+        #         "webhook_url": "https://discord.com/api/webhooks/1165673654546350240/IN_vTY7lTvzRUNjS68sr7goALne78LrKYTksnHawpnJ96FLbylnnYvHgVKvGdK3MocLO"
+        #     },
+        #     "ntfy.sh": {
+        #         "webhook_url": "https://ntfy.sh/pvBEFuX4SIRbKGnP"
+        #     }
+        # })
         
     def Globe3D(self):
         
@@ -250,7 +264,7 @@ class MDI():
             self.themeDropdown.addItem(theme)
             
         # select current theme from settings file
-        self.themeDropdown.setCurrentText(self.settings.get_settings()["theme"])
+        self.themeDropdown.setCurrentText(self.settings.get_settings('theme'))
 
         saveBtnForm = QPushButton("Save")
         saveBtnForm.clicked.connect(self.on_saveBtnForm_clicked)
