@@ -16,7 +16,7 @@ def main():
     
     # Load theme from settings.json
     settings = Settings(console)
-    theme = settings.get_settings()["theme"] or "default"
+    theme = settings.get_settings("theme") or "default"
     
     # Check if theme is not default
     if theme != "default":
