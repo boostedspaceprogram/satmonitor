@@ -22,7 +22,7 @@ class Settings:
         self.console.log(f"{__class__.__name__} file created", "debug")
         jsonSettings = {
             "created_at": time.time(),
-            "theme": "dark_teal.xml",
+            "theme": "light_teal.xml",
         }
         self.saveSettingsFile(json.dumps(jsonSettings))
         
