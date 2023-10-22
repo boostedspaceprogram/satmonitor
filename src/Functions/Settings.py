@@ -38,11 +38,14 @@ class Settings:
         with open("settings.json", "w") as f:
             f.write(json)
             
-    def get_settings(self):
+    def get_settings_full(self):
         return self.loadSettingsFile()
     
+    def get_settings(self, key):
+        return self.loadSettingsFile()[key]
+    
     def set_settings(self, key, value):
-        jsonSettings = self.get_settings()
+        jsonSettings = self.get_settings_full()
         jsonSettings[key] = value
         self.saveSettingsFile(json.dumps(jsonSettings))
             
