@@ -28,7 +28,6 @@ class Settings:
         
     def loadSettingsFile(self):
         # Load settings.json file
-        self.console.log(f"{__class__.__name__} file loaded", "debug")
         with open("settings.json", "r") as f:
             return json.load(f)
     
