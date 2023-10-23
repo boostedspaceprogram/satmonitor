@@ -29,27 +29,23 @@ class UserNotificationProvider():
             if self.config[provider]["enabled"]:
                 self.providerList.append(provider)
             
-    def send_notification(self, provider, message):
-        # Error handling
-        if provider not in self.providerList:
-            self.console.log(f"{__class__.__name__} {provider.upper()} not configured and/or enabled", "error")
-        
+    def send_notification(self, message):
         # Send notification
-        if "windows" in self.providerList and provider == "windows":
+        if "windows" in self.providerList:
             WindowsNotificationProvider(self.config["windows"]).send_notification(message)
         
-        if "telegram" in self.providerList and provider == "telegram":
+        if "telegram" in self.providerList:
             TelegramNotificationProvider(self.config["telegram"]).send_notification(message)
         
-        if "ntfy.sh" in self.providerList and provider == "ntfy.sh":
+        if "ntfy.sh" in self.providerList:
             NtfyNotificationProvider(self.config["ntfy.sh"]).send_notification(message)
             
-        if "discord" in self.providerList and provider == "discord":
+        if "discord" in self.providerList:
             DiscordNotificationProvider(self.config["discord"]).send_notification(message)
         
         # Log message
         if len(self.providerList) != 0:
-            self.logToConsole(provider, message)
+            self.logToConsole(message)
           
-    def logToConsole(self, provider, message):
-        self.console.log(f"{__class__.__name__} Notification sent to service: {provider.upper()} <br/> {message}", "debug")
+    def logToConsole(self, message):
+        self.console.log(f"{__class__.__name__} Notification sent to service: {self.providerList} <br/> {message}", "debug")

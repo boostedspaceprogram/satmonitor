@@ -138,6 +138,8 @@ class MDI():
             self.subWindow.setWindowTitle("Upcoming Launches - " + str(len(self.upcomingLaunchesData["results"])) + " results")
             self.treeWidget.setColumnCount(6)
             self.treeWidget.setHeaderLabels(["Rocket", "Mission", "Net", "Status", "Pad", "Location"])
+
+            self.userNotificationProvider.send_notification("Upcoming Launches - " + str(len(self.upcomingLaunchesData["results"])) + " results")
         else:
             self.treeWidget.setColumnCount(1)
             self.treeWidget.setHeaderLabels(["Error"])
