@@ -31,7 +31,7 @@ class UserNotificationProvider():
     def send_notification(self, provider, message):
         # Error handling
         if provider not in self.providerList:
-            self.console.log(f"{__class__.__name__} {provider} not configured", "error")
+            self.console.log(f"{__class__.__name__} {provider.upper()} not configured and/or enabled", "error")
         
         # Send notification
         if "telegram" in self.providerList and provider == "telegram":
