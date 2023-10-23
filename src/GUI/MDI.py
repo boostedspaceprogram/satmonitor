@@ -127,8 +127,6 @@ class MDI():
         self.subWindow.setWindowTitle("Upcoming Launches")
         self.subWindow.resize(800, 300)
         
-        self.userNotificationProvider.send_notification("telegram", "test")
-        
         # Create a QTreeWidget widget 
         self.treeWidget = QTreeWidget()
         self.treeWidget.setAlternatingRowColors(True)
@@ -301,6 +299,9 @@ class MDI():
         description = QLabel("If you want to receive alerts, fill the required fields below.", self.alertForm)
         self.alertForm.layout().addWidget(description)
         
+        # Windows 10/11 notifications
+        self.windowsGroupBox()
+        
         # Telegram group box
         self.telegramGroupBox()
         
@@ -328,6 +329,9 @@ class MDI():
         
         # Save settings
         self.settings.set_settings("notifications", {
+            "windows": {
+                "enabled": self.windowsBox.isChecked()
+            },
             "telegram": {
                 "enabled": self.telegramBox.isChecked(),
                 "chat_id": self.telegramChatIdInput.text(),
@@ -353,6 +357,17 @@ class MDI():
         self.QMessageBox.setStandardButtons(QMessageBox.Ok)
         self.QMessageBox.show()
         
+    def windowsGroupBox(self):
+        # Windows 10/11 Box
+        self.windowsBox = QGroupBox("Windows 10/11", self.alertForm)
+        self.windowsBox.setCheckable(True)
+        notifications = self.settings.get_settings("notifications")
+        self.windowsBox.setChecked(notifications.get("windows", {}).get("enabled", False))
+        self.windowsBox.setStyleSheet("font-weight: bold;")
+        windowsBoxLayout = QVBoxLayout()
+        self.windowsBox.setLayout(windowsBoxLayout)
+        self.alertForm.layout().addWidget(self.windowsBox)
+     
     def telegramGroupBox(self):
         # Telegram Box
         self.telegramBox = QGroupBox("Telegram", self.alertForm)

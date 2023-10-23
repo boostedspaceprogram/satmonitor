@@ -1,3 +1,4 @@
+from Notifications.WindowsNotificationProvider import WindowsNotificationProvider
 from Notifications.TelegramNotificationProvider import TelegramNotificationProvider
 from Notifications.NtfyNotificationProvider import NtfyNotificationProvider
 from Notifications.DiscordNotificationProvider import DiscordNotificationProvider
@@ -34,6 +35,9 @@ class UserNotificationProvider():
             self.console.log(f"{__class__.__name__} {provider.upper()} not configured and/or enabled", "error")
         
         # Send notification
+        if "windows" in self.providerList and provider == "windows":
+            WindowsNotificationProvider(self.config["windows"]).send_notification(message)
+        
         if "telegram" in self.providerList and provider == "telegram":
             TelegramNotificationProvider(self.config["telegram"]).send_notification(message)
         
