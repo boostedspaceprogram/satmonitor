@@ -1,3 +1,5 @@
+from PyQt5 import *
+from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import *
@@ -10,6 +12,34 @@ from Functions.UserNotificationProvider import UserNotificationProvider
 
 import os, sys
 
+class MDIArea(QMdiArea):
+
+    def __init__(self, background_pixmap, parent = None):
+        QMdiArea.__init__(self, parent)
+        self.background_pixmap = background_pixmap
+        self.centered = True
+        self.display_pixmap = None
+    
+    def paintEvent(self, event):
+        painter = QPainter()
+        painter.begin(self.viewport())
+        painter.fillRect(event.rect(), QBrush(self.palette().color(QPalette.Window)))
+        x = int(self.width() / 2 - self.display_pixmap.width() / 2)
+        y = int(self.height() / 2 - self.display_pixmap.height() / 2) 
+        painter.drawPixmap(x, y, self.display_pixmap)
+        painter.end()
+    
+    def resizeEvent(self, event):
+        windowHeight = event.size().height()
+        if windowHeight >= 800:
+            max_size = QSize(event.size().width() - 500, event.size().height() - 500)
+        elif windowHeight >= 600:
+            max_size = QSize(event.size().width() - 300, event.size().height() - 300)
+        elif windowHeight >= 400:
+            max_size = QSize(event.size().width() - 200, event.size().height() - 200)
+        else:
+            max_size = QSize(event.size().width(), event.size().height())
+        self.display_pixmap = self.background_pixmap.scaled(max_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
 class MDI():
     
     console = None
@@ -28,8 +58,8 @@ class MDI():
         self.console.log(f"{__class__.__name__} initialization", "info")
         
         # MDI initialization/properties
-        self.mdiArea = QMdiArea()
-        
+        self.mdiArea = MDIArea(QPixmap("./src/GUI/Ribbon/icons/logo_dark.png"))
+
         # User notification provider
         self.userNotificationProvider = UserNotificationProvider(self.console)
         
@@ -90,7 +120,7 @@ class MDI():
         
     def embedLivestream(self):
         # Livestream embed
-        self.liveStream = Livestream(self.console, "https://www.youtube.com/embed/4aMf9K_ZaAI?autoplay=1&mute=1")
+        self.liveStream = Livestream(self.console, "https://www.youtube.com/embed/ouWMt0bBLMY?si=HO5whaFmXYgRxbp8")
         self.liveStream = self.liveStream.LivestreamView()
         
         # Create a QMdiSubWindow widget
