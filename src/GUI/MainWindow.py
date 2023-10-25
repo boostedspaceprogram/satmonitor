@@ -14,8 +14,8 @@ class MainWindow(QMainWindow):
         QMainWindow.__init__(self, None)
         self.resize(1280, 720)
         self.setWindowTitle("Main Window")
+        self.setWindowIcon(get_icon("logo_dark"))
         self.setDockNestingEnabled(True)
-        self.setWindowIcon(get_icon("logo"))
 
         # Console class
         self.console = Console()
