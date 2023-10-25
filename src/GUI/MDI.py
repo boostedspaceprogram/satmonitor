@@ -10,6 +10,7 @@ from Functions.Requests import Requests
 from Functions.Settings import Settings
 from Functions.UserNotificationProvider import UserNotificationProvider
 
+from GUI.Ribbon.Icons import get_icon
 import os, sys
 
 class MDIArea(QMdiArea):
@@ -58,7 +59,7 @@ class MDI():
         self.console.log(f"{__class__.__name__} initialization", "info")
         
         # MDI initialization/properties
-        self.mdiArea = MDIArea(QPixmap("./src/GUI/Ribbon/icons/logo_dark.png"))
+        self.mdiArea = MDIArea(QPixmap(get_icon("logo_dark").pixmap(QSize(2048, 2048))))
 
         # User notification provider
         self.userNotificationProvider = UserNotificationProvider(self.console)
