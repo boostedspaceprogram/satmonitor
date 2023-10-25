@@ -1,3 +1,4 @@
+from PyQt5.QtCore import QUrl
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineSettings
 
 class Livestream():
@@ -24,7 +25,7 @@ class Livestream():
         self.liveStream.settings().setAttribute(QWebEngineSettings.PlaybackRequiresUserGesture, False) # Allow autoplay
         self.liveStream.setHtml(f'''
         <body style="margin:0px;padding:0px;overflow:hidden">
-            <iframe src="{self.get_url()}" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <iframe src="{self.get_url()}" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture;" allowfullscreen></iframe>
         </body>
         ''')
         
