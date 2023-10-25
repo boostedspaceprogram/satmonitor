@@ -12,7 +12,9 @@ class WindowsNotificationProvider():
             {'activationType': 'protocol', 'arguments': '', 'content': 'Close'}
         ]
         
-        notify(title="Sat Monitor",
+        notify(
+            app_id="SatMonitor",
+            title="Upcoming Launches",
             body=message,
             buttons=notifyButtons,
         )
