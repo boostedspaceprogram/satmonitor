@@ -20,7 +20,7 @@ class MDIArea(QMdiArea):
         self.background_pixmap = background_pixmap
         self.centered = True
         self.display_pixmap = None
-    
+            
     def paintEvent(self, event):
         painter = QPainter()
         painter.begin(self.viewport())
@@ -68,7 +68,7 @@ class MDI():
         
         # self.Globe2D()
         
-        # self.embedLivestream()
+        self.embedLivestream()
         
         # self.TLEWindow()
         
@@ -86,6 +86,7 @@ class MDI():
         # Globe sub window
         globe_3d_subwindow = QMdiSubWindow()
         globe_3d_subwindow.setWindowTitle(self.globe3d.get_window_title())
+        globe_3d_subwindow.setWindowIcon(get_icon("logo_dark"))
         
         # Create a QWebEngineView widget
         self.WebView3D = QWebEngineView()
@@ -108,6 +109,7 @@ class MDI():
         
         # Globe sub window
         globe_2d_subwindow = QMdiSubWindow()
+        globe_2d_subwindow.setWindowIcon(get_icon("logo_dark"))
         globe_2d_subwindow.setWindowTitle(self.globe2d.get_window_title())
         
         # Create a QWebEngineView widget
@@ -126,6 +128,7 @@ class MDI():
         
         # Create a QMdiSubWindow widget
         self.subWindow = QMdiSubWindow()
+        self.subWindow.setWindowIcon(get_icon("logo_dark"))
         self.subWindow.setWindowTitle("Live Stream")
         self.subWindow.setWidget(self.liveStream)
         
@@ -140,6 +143,7 @@ class MDI():
         # Create a QMdiSubWindow widget
         self.subWindow = QMdiSubWindow()
         self.subWindow.setWindowTitle("TLE Data")
+        self.subWindow.setWindowIcon(get_icon("logo_dark"))
         self.subWindow.resize(600, 500)
         self.subWindow.setWidget(self.TLE)
         
@@ -156,6 +160,7 @@ class MDI():
         # Create a QMdiSubWindow widget
         self.subWindow = QMdiSubWindow()
         self.subWindow.setWindowTitle("Upcoming Launches")
+        self.subWindow.setWindowIcon(get_icon("logo_dark"))
         self.subWindow.resize(800, 300)
         
         # Create a QTreeWidget widget 
@@ -219,6 +224,7 @@ class MDI():
         # Create a QMdiSubWindow widget
         self.subWindow = QMdiSubWindow()
         self.subWindow.setWindowTitle("Upcoming Launches Details - " + item.text(1))
+        self.subWindow.setWindowIcon(get_icon("logo_dark"))
         self.subWindow.resize(400, 300)
         
         # Create a QTreeWidget widget
@@ -250,6 +256,7 @@ class MDI():
         # Create a QMdiSubWindow widget
         self.subWindow = QMdiSubWindow()
         self.subWindow.setWindowTitle("Settings")
+        self.subWindow.setWindowIcon(get_icon("logo_dark"))
         self.subWindow.resize(400, 300)
         
         # create form
@@ -316,6 +323,7 @@ class MDI():
         # Create a QMdiSubWindow widget
         self.subWindow = QMdiSubWindow()
         self.subWindow.setWindowTitle("Alerts")
+        self.subWindow.setWindowIcon(get_icon("logo_dark"))
         self.subWindow.resize(500, 400)
         
         # create form

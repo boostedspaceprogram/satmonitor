@@ -12,8 +12,8 @@ class MainWindow(QMainWindow):
     
     def __init__(self):
         QMainWindow.__init__(self, None)
-        self.resize(1280, 720)
-        self.setWindowTitle("Main Window")
+        self.resize(1400, 900)
+        self.setWindowTitle("Main Window - Sat Monitor")
         self.setWindowIcon(get_icon("logo_dark"))
         self.setDockNestingEnabled(True)
 
