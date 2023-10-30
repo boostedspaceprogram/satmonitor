@@ -68,11 +68,65 @@ class MDI():
         
         # self.Globe2D()
         
-        self.embedLivestream()
+        # self.embedLivestream()
         
         # self.TLEWindow()
         
         # self.upcomingLaunchesWindow()
+        
+    def aboutWindow(self):
+        # Create a QMdiSubWindow widget
+        self.subWindow = QMdiSubWindow()
+        self.subWindow.setWindowTitle("About - Sat Monitor")
+        self.subWindow.setWindowIcon(get_icon("logo_dark"))
+        self.subWindow.resize(300, 300)
+        
+        # qform
+        form = QWidget()
+        layout = QFormLayout(form)
+        form.setLayout(layout)
+        
+        # title
+        title = QLabel("Sat Monitor", form)
+        title.setStyleSheet("font-size: 20px; font-weight: bold;")
+        form.layout().addWidget(title)
+        
+        # add visual line break
+        line = QFrame(form)
+        line.setFrameShape(QFrame.HLine)
+        line.setFrameShadow(QFrame.Sunken)
+        form.layout().addWidget(line)
+        
+        # description
+        description = QLabel("Sat Monitor is a free and open source satellite monitoring application build with Python and Qt5, it's main purpose is to provide a simple and easy to use interface to monitor satellites and other space related data.", form)
+        form.layout().addWidget(description)
+        
+        # allow label to grow and shrink
+        description.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        description.setWordWrap(True)
+        description.setAlignment(Qt.AlignTop)
+        
+        # version
+        version = QLabel("Version: 1.0.0", form)
+        form.layout().addWidget(version)
+        
+        # add visual line break
+        line = QFrame(form)
+        line.setFrameShape(QFrame.HLine)
+        line.setFrameShadow(QFrame.Sunken)
+        form.layout().addWidget(line)
+
+        # update button
+        updateBtn = QPushButton("Check for updates", form)
+        form.layout().addWidget(updateBtn)
+    
+        # Set form as sub window widget
+        self.subWindow.setWidget(form)
+        
+        # Add the QMdiSubWindow widget to the QMdiArea widget
+        self.mdiArea.addSubWindow(self.subWindow)
+        self.subWindow.show()
+        return self.subWindow
         
     def Globe3D(self):
         

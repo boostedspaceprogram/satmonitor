@@ -44,6 +44,7 @@ class MainWindow(QMainWindow):
         self._grid_close_all = self.add_action("Close all", "grid_close_all", "Close all", True, self.on_grid_close_all)
         self._alert_action = self.add_action("Alerts", "alert", "Alerts", True, self.on_alert)
         self._alert_mute = self.add_action("Mute", "alert_mute", "Mute", True, self.on_alert_mute)
+        self._open_about = self.add_action("About", "about", "About", True, self.on_open_about)
         
         # Settings tab
         self._open_settings = self.add_action("Settings", "settings", "Open settings", True, self.on_open_settings) 
@@ -105,6 +106,15 @@ class MainWindow(QMainWindow):
         satellite_pane.add_ribbon_widget(RibbonButton(self, self._open_tle_view, True))
         satellite_pane.add_ribbon_widget(RibbonButton(self, self._open_upcoming_launches, True))
         
+        # Window pane
+        
+        # Help pane
+        help_pane.add_ribbon_widget(RibbonButton(self, self._open_about, True))
+       
+       
+    def on_open_about(self):
+        self.console.log("About opened", "debug")
+        self.mdiArea.aboutWindow().show()
 
     def on_open_tle_view(self):
         self.console.log("TLE view opened", "debug")
