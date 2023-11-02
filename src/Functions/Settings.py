@@ -23,6 +23,7 @@ class Settings:
         jsonSettings = {
             "created_at": time.time(),
             "theme": "default",
+            "version": "0.1.0-beta",
         }
         self.saveSettingsFile(jsonSettings)
         
