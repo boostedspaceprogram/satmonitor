@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 from GUI.Ribbon.Icons import get_icon
 from Functions.Settings import Settings
 
-import requests, json
+import requests
 
 class AboutWindow():
     
