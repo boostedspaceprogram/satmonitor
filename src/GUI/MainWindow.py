@@ -6,6 +6,9 @@ from GUI.StatusBar import StatusBar
 from GUI.MDI import MDI
 from GUI.Console import Console
 
+# Widgets
+from GUI.Widgets.About import *
+
 class MainWindow(QMainWindow):
     
     console = None
@@ -114,7 +117,7 @@ class MainWindow(QMainWindow):
        
     def on_open_about(self):
         self.console.log("About opened", "debug")
-        self.mdiArea.aboutWindow().show()
+        self.mdiArea.AboutWindow()
 
     def on_open_tle_view(self):
         self.console.log("TLE view opened", "debug")

@@ -10,6 +10,9 @@ from Functions.Requests import Requests
 from Functions.Settings import Settings
 from Functions.UserNotificationProvider import UserNotificationProvider
 
+# import all python files from GUI.Widgets
+from GUI.Widgets.About import *
+
 from GUI.Ribbon.Icons import get_icon
 import os, sys
 
@@ -45,6 +48,7 @@ class MDI():
     
     console = None
     mdiArea = None
+    widget = None
     settings = None
     userNotificationProvider = None
     
@@ -64,116 +68,14 @@ class MDI():
         # User notification provider
         self.userNotificationProvider = UserNotificationProvider(self.console)
         
-        # self.Globe3D()
-        
-        # self.Globe2D()
-        
         # self.embedLivestream()
         
         # self.TLEWindow()
         
         # self.upcomingLaunchesWindow()
         
-    def aboutWindow(self):
-        # Create a QMdiSubWindow widget
-        self.subWindow = QMdiSubWindow()
-        self.subWindow.setWindowTitle("About - Sat Monitor")
-        self.subWindow.setWindowIcon(get_icon("logo_dark"))
-        self.subWindow.resize(300, 300)
-        
-        # qform
-        form = QWidget()
-        layout = QFormLayout(form)
-        form.setLayout(layout)
-        
-        # title
-        title = QLabel("Sat Monitor", form)
-        title.setStyleSheet("font-size: 20px; font-weight: bold;")
-        form.layout().addWidget(title)
-        
-        # add visual line break
-        line = QFrame(form)
-        line.setFrameShape(QFrame.HLine)
-        line.setFrameShadow(QFrame.Sunken)
-        form.layout().addWidget(line)
-        
-        # description
-        description = QLabel("Sat Monitor is a free and open source satellite monitoring application build with Python and Qt5, it's main purpose is to provide a simple and easy to use interface to monitor satellites and other space related data.", form)
-        form.layout().addWidget(description)
-        
-        # allow label to grow and shrink
-        description.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        description.setWordWrap(True)
-        description.setAlignment(Qt.AlignTop)
-        
-        # version
-        version = QLabel("Version: 1.0.0", form)
-        form.layout().addWidget(version)
-        
-        # add visual line break
-        line = QFrame(form)
-        line.setFrameShape(QFrame.HLine)
-        line.setFrameShadow(QFrame.Sunken)
-        form.layout().addWidget(line)
-
-        # update button
-        updateBtn = QPushButton("Check for updates", form)
-        form.layout().addWidget(updateBtn)
-    
-        # Set form as sub window widget
-        self.subWindow.setWidget(form)
-        
-        # Add the QMdiSubWindow widget to the QMdiArea widget
-        self.mdiArea.addSubWindow(self.subWindow)
-        self.subWindow.show()
-        return self.subWindow
-        
-    def Globe3D(self):
-        
-        # Create 3D globe
-        self.globe3d = Globe(self.console, "3D", "Cesium Globe", {
-            "shouldAnimate": True,
-            "homeButton": False,
-            "navigationHelpButton": False,
-        })
-        
-        # Globe sub window
-        globe_3d_subwindow = QMdiSubWindow()
-        globe_3d_subwindow.setWindowTitle(self.globe3d.get_window_title())
-        globe_3d_subwindow.setWindowIcon(get_icon("logo_dark"))
-        
-        # Create a QWebEngineView widget
-        self.WebView3D = QWebEngineView()
-        globe_3d_subwindow.setWidget(self.WebView3D)
-        
-        # Load the CesiumJS webpage
-        self.WebView3D.setHtml(self.globe3d.html_out())
-        
-        self.mdiArea.addSubWindow(globe_3d_subwindow)  
-
-    def Globe2D(self):
-        
-        # Create 2D globe
-        self.globe2d = Globe(self.console, "2D", "Map", {
-            "shouldAnimate": True,
-            "homeButton": False,
-            "navigationHelpButton": False,
-            "sceneMode": "Cesium.SceneMode.SCENE2D",
-        })
-        
-        # Globe sub window
-        globe_2d_subwindow = QMdiSubWindow()
-        globe_2d_subwindow.setWindowIcon(get_icon("logo_dark"))
-        globe_2d_subwindow.setWindowTitle(self.globe2d.get_window_title())
-        
-        # Create a QWebEngineView widget
-        self.WebView2D = QWebEngineView()
-        globe_2d_subwindow.setWidget(self.WebView2D)
-        
-        # Load the CesiumJS webpage
-        self.WebView2D.setHtml(self.globe2d.html_out())
-        
-        self.mdiArea.addSubWindow(globe_2d_subwindow)
+    def AboutWindow(self):
+        return AboutWindow(self.console, self.mdiArea)
         
     def embedLivestream(self):
         # Livestream embed
