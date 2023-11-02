@@ -3,8 +3,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import *
+
 from Functions.Globe import Globe
-from Functions.Livestream import Livestream
 from Functions.TLE import TLE
 from Functions.Requests import Requests
 from Functions.Settings import Settings
@@ -12,6 +12,7 @@ from Functions.UserNotificationProvider import UserNotificationProvider
 
 # import all python files from GUI.Widgets
 from GUI.Widgets.About import *
+from GUI.Widgets.Livestream import *
 
 from GUI.Ribbon.Icons import get_icon
 import os, sys
@@ -68,7 +69,7 @@ class MDI():
         # User notification provider
         self.userNotificationProvider = UserNotificationProvider(self.console)
         
-        # self.embedLivestream()
+        # self.LivestreamWindow()
         
         # self.TLEWindow()
         
@@ -76,20 +77,9 @@ class MDI():
         
     def AboutWindow(self):
         return AboutWindow(self.console, self.mdiArea)
-        
-    def embedLivestream(self):
-        # Livestream embed
-        self.liveStream = Livestream(self.console, "https://www.youtube.com/embed/ouWMt0bBLMY?si=HO5whaFmXYgRxbp8")
-        self.liveStream = self.liveStream.LivestreamView()
-        
-        # Create a QMdiSubWindow widget
-        self.subWindow = QMdiSubWindow()
-        self.subWindow.setWindowIcon(get_icon("logo_dark"))
-        self.subWindow.setWindowTitle("Live Stream")
-        self.subWindow.setWidget(self.liveStream)
-        
-        # Add the QMdiSubWindow widget to the QMdiArea widget
-        self.mdiArea.addSubWindow(self.subWindow)
+    
+    def LivestreamWindow(self):
+        return LivestreamWindow(self.console, self.mdiArea)
        
     def TLEWindow(self):
         # TLE data class
