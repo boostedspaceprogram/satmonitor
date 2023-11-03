@@ -31,7 +31,7 @@ jobs:
     - name: Build with PyInstaller
       run: |
         $BUILD_NUMBER = $env:BUILD_NUMBER
-        pyinstaller --noconsole --uac-admin --name "Sat-Monitor" --add-data="src/GUI/Ribbon/icons;GUI/Ribbon/icons" --add-data="src/GUI/Ribbon/stylesheets;GUI/Ribbon/stylesheets" src/main.py
+        pyinstaller Sat-Monitor.spec
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
