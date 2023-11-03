@@ -5,6 +5,13 @@ from GUI.Console import Console
 from Functions.Settings import Settings
 from qt_material import apply_stylesheet
 
+try:
+    from ctypes import windll  # Only exists on Windows.
+    appId = 'boostedspaceprogram.satmonitor'
+    windll.shell32.SetCurrentProcessExplicitAppUserModelID(appId)
+except ImportError:
+    pass
+
 def main():
     # Create app and main window
     app = QApplication(sys.argv)
