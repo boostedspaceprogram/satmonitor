@@ -8,8 +8,7 @@ The Boosted Space Program (BSP) is a project that aims to create a community of 
 
 ## Table of Contents
 - [Features](#features)
-- [How to build and run on Windows](#how-to-build-and-run-on-windows)
-- [How to build and run on Linux/MacOS](#how-to-build-and-run-on-linuxmacos)
+- [How to build and run on Windows](#how-to-build-and-run-on-windows-/-macos-/-linux)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -35,16 +34,10 @@ Here is a list of the features that we want to implement in the application. Whe
 #### WON'T HAVE
 - [X] Paid subscription, ads, or any other form of monetization, unless it is for a good cause. ❤️🚀
 
-## How to build and run on Windows
+## How to build and run on Windows / MacOS / Linux
 1. Install python3 and pip3
 2. Install requirements: `pip3 install -r requirements.txt`
-3. Run the following command: `pyinstaller --noconsole --uac-admin --name "Sat-Monitor" --add-data="src/GUI/Ribbon/icons;GUI/Ribbon/icons" --add-data="src/GUI/Ribbon/stylesheets;GUI/Ribbon/stylesheets" src/main.py`
-4. Run the executable called `Sat-Monitor` in the `dist` folder
-
-## How to build and run on Linux/MacOS
-1. Install python3 and pip3
-2. Install requirements: `pip3 install -r requirements.txt`
-3. Run the following command: `pyinstaller --noconsole --name "Sat-Monitor" --add-data="src/GUI/Ribbon/icons:GUI/Ribbon/icons" --add-data="src/GUI/Ribbon/stylesheets:GUI/Ribbon/stylesheets" src/main.py`
+3. Run the following command: `pyinstaller Sat-Monitor.spec` on the OS that you want to build for (Windows, MacOS, Linux)
 4. Run the executable called `Sat-Monitor` in the `dist` folder
 
 ## Contributing
