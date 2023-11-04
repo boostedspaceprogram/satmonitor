@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 from GUI.Ribbon.Icons import get_icon
 from Functions.Settings import Settings
 
-import requests
+import requests, subprocess, sys, os, time
 
 class AboutWindow():
     
@@ -87,11 +87,79 @@ class AboutWindow():
                 msgBox = QMessageBox()
                 msgBox.setIcon(QMessageBox.Information)
                 msgBox.setWindowIcon(get_icon("logo_dark"))
-                msgBox.setText(f"New update found on github!\nCurrent version: {self.settings.get_settings('version')}\nLatest version: {tag_name}")
+                msgBox.setText(f"New update found on github!\nCurrent version: {self.settings.get_settings('version')}\nLatest version: {tag_name}\n\nWould you like to update now? (This will close the application)")
                 msgBox.setWindowTitle("Update")
                 msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
                 msgBox.setDefaultButton(QMessageBox.Ok)
                 msgBox.exec_()
+                
+                # Check if need to update
+                if msgBox.result() == QMessageBox.Ok:
+                    # Download latest release
+                    self.console.log("Downloading latest release...", "info")
+                    # fetch latest release download url
+                    downloadUrl = json[0]["assets"][0]["browser_download_url"]
+                    # download latest release to temp folder
+                    response = requests.get(downloadUrl, headers={"Cache-Control": "no-cache"})
+                    if response.status_code == 200:
+                        try:
+                            # create update-temp folder if it doesn't exist
+                            if not os.path.exists("update"):
+                                os.makedirs("update")
+                            
+                            # check if file exists and delete it
+                            if os.path.exists("update/sat-monitor-" + tag_name + ".exe"):
+                                os.remove("update/sat-monitor-" + tag_name + ".exe")    
+                            
+                            # save file which is a .exe to temp folder
+                            with open("update/sat-monitor-" + tag_name + ".exe", "wb") as file:
+                                file.write(response.content)
+                                self.console.log("Downloaded latest release and saved to update folder", "info")
+                            
+                            # Check if file has successfully been downloaded and saved to update folder
+                            if os.path.exists("update/sat-monitor-" + tag_name + ".exe"):
+                                # run latest release
+                                self.console.log("Running latest release setup and closing main application", "info")
+                                
+                                # open new process to execute .exe file
+                                command = ['cmd.exe', '/c', 'start', 'update/sat-monitor-' + tag_name + '.exe']
+                                subprocess.Popen(command, shell=True)
+                                
+                                # close application so it can be updated
+                                sys.exit()
+                            else:
+                                self.console.log("Error running latest release", "error")
+                                # show message box
+                                msgBox = QMessageBox()
+                                msgBox.setIcon(QMessageBox.Information)
+                                msgBox.setWindowIcon(get_icon("logo_dark"))
+                                msgBox.setText(f"Error running latest release, please try again later or manually download the latest release from github")
+                                msgBox.setWindowTitle("Update")
+                                msgBox.setStandardButtons(QMessageBox.Ok)
+                                msgBox.setDefaultButton(QMessageBox.Ok)
+                                msgBox.exec_()
+                        except(Exception):
+                            self.console.log("Error running latest release", "error")
+                            # show message box
+                            msgBox = QMessageBox()
+                            msgBox.setIcon(QMessageBox.Information)
+                            msgBox.setWindowIcon(get_icon("logo_dark"))
+                            msgBox.setText(Exception)
+                            msgBox.setWindowTitle("Update")
+                            msgBox.setStandardButtons(QMessageBox.Ok)
+                            msgBox.setDefaultButton(QMessageBox.Ok)
+                            msgBox.exec_()
+                    else:
+                        self.console.log("Error downloading latest release", "error")
+                        # show message box
+                        msgBox = QMessageBox()
+                        msgBox.setIcon(QMessageBox.Information)
+                        msgBox.setWindowIcon(get_icon("logo_dark"))
+                        msgBox.setText(f"Error downloading latest release, please try again later or manually download the latest release from github")
+                        msgBox.setWindowTitle("Update")
+                        msgBox.setStandardButtons(QMessageBox.Ok)
+                        msgBox.setDefaultButton(QMessageBox.Ok)
+                        msgBox.exec_()
             else:
                 self.console.log("No updates found", "info")
                 # show message box
