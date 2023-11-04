@@ -135,3 +135,6 @@ settings.json
 
 # Exe setup compiled dir
 exe/
+
+# Update folder
+update/
