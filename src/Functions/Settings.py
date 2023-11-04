@@ -58,3 +58,9 @@ class Settings:
                 jsonSettings[key] = value
             self.saveSettingsFile(jsonSettings)
             
+    def get(self, key):
+        return self.get_settings(key)
+    
+    def set(self, key, value):
+        return self.set_settings(key, value)
+            
