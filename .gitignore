@@ -132,3 +132,6 @@ cache.sqlite
 
 # Settings file
 settings.json
+
+# Exe setup compiled dir
+exe/
