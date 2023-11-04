@@ -3,7 +3,7 @@
 ProjectFileVersion = 1.1
 [General]
 Program name = Sat Monitor
-Program version = 1.0.0
+Program version = 0.2.0-beta
 Windows XP = 0
 Windows Server 2003 = 1
 Windows Vista = 0
@@ -57,7 +57,7 @@ Time = 2
 PlaySound = 0
 Allow = 1
 [Build]
-File = C:\Users\umitg\Downloads\SatMonitor-setup.exe
+File = E:\Git\satmonitor\exe\SatMonitor-0.2.0-beta-windows-x86-64.exe
 SetupIconPath = ..\icons\ancient.ico
 UninstallIconPath = ..\icons\ancient.ico
 CompressionMethod = 0
@@ -104,11 +104,11 @@ E:\Git\satmonitor\dist\Sat-Monitor\Sat-Monitor.exe
 8.6 MB
 exe
 [Licence_Begin]
-38268
+38264
 {\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Arial;}}
 {\colortbl ;\red0\green0\blue255;}
 {\*\generator Riched20 10.0.22000}\viewkind4\uc1 
-\pard\cf0\f0\fs20  GNU AFFERO GENERAL PUBLIC LICENSE\par
+\pard\f0\fs20  GNU AFFERO GENERAL PUBLIC LICENSE\par
                        Version 3, 19 November 2007\par
 \par
  Copyright (C) 2007 Free Software Foundation, Inc. <{{\field{\*\fldinst{HYPERLINK "https://fsf.org/"}}{\fldrslt{https://fsf.org/\ul0\cf0}}}}\f0\fs20 >\par
@@ -772,6 +772,21 @@ For more information on this, and how to apply and follow the GNU AGPL, see\par
 }
  [Licence_End]
 [Registry]
+HKEY_LOCAL_MACHINE
+SOFTWARE\Boosted Space Program\Sat Monitor
+Version
+0.2.0-beta
+1
+HKEY_LOCAL_MACHINE
+SOFTWARE\Boosted Space Program\Sat Monitor
+DisplayName
+Sat Monitor
+1
+HKEY_LOCAL_MACHINE
+SOFTWARE\Boosted Space Program\Sat Monitor
+AppID
+boostedspaceprogram.satmonitor
+1
 [Variables]
 [SCs]
 Startmenu
