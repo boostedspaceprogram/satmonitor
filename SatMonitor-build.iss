@@ -25,11 +25,11 @@ DefaultDirName={autopf}\Boosted Space Program\Sat Monitor
 DisableDirPage=yes
 ChangesAssociations=yes
 DisableProgramGroupPage=yes
-LicenseFile=E:\Git\satmonitor\exe\license.txt
+LicenseFile=LICENSE.txt
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=commandline
-OutputDir=E:\Git\satmonitor\exe
+OutputDir=exe\
 OutputBaseFilename=Sat-Monitor-windows-x86-64
 Compression=lzma
 SolidCompression=yes
@@ -67,8 +67,8 @@ Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "E:\Git\satmonitor\dist\Sat-Monitor\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Git\satmonitor\dist\Sat-Monitor\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "dist\Sat-Monitor\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "dist\Sat-Monitor\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
