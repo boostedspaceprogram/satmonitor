@@ -24,17 +24,24 @@ jobs:
       run: |
         pip install pyinstaller
 
-    - name: Get current timestamp
-      id: timestamp
-      run: echo "::set-output name=timestamp::$(Get-Date -UFormat %Y%m%d%H%M%S)"
-
     - name: Build with PyInstaller
       run: |
         $BUILD_NUMBER = $env:BUILD_NUMBER
         pyinstaller Sat-Monitor.spec
+
+    - name: Build setup file
+      run: |
+        "%programfiles(x86)%\Inno Setup 6\iscc.exe" "SatMonitor-build.iss"
+      shell: cmd
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
         name: compiled-executable
         path: dist
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: compiled-installer
+        path: exe
