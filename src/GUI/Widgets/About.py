@@ -122,6 +122,9 @@ class AboutWindow():
                                 # run latest release
                                 self.console.log("Running latest release setup and closing main application", "info")
                                 
+                                # Update settings.json file with latest version
+                                self.settings.set_settings("version", tag_name)
+                                
                                 # open new process to execute .exe file
                                 command = ['cmd.exe', '/c', 'start', 'update/sat-monitor-' + tag_name + '.exe']
                                 subprocess.Popen(command, shell=True)
