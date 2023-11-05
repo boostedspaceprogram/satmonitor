@@ -40,6 +40,13 @@ def main():
     tray.setVisible(True) 
     tray.setToolTip("Sat Monitor")
     
+    # Listen for double-click on tray icon
+    def tray_double_clicked(reason):
+        if reason == QSystemTrayIcon.DoubleClick:
+            main_window.show()
+
+    tray.activated.connect(tray_double_clicked)
+    
     # Creating the options 
     menu = QMenu() 
     
