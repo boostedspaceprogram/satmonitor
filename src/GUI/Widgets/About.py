@@ -107,9 +107,10 @@ class AboutWindow():
                             if not os.path.exists("update"):
                                 os.makedirs("update")
                             
-                            # check if file exists and delete it
-                            if os.path.exists("update/sat-monitor-" + tag_name + ".exe"):
-                                os.remove("update/sat-monitor-" + tag_name + ".exe")    
+                            # check if other update files exist and delete them
+                            for file in os.listdir("update"):
+                                if file.endswith(".exe"):
+                                    os.remove("update/" + file)
                             
                             # save file which is a .exe to temp folder
                             with open("update/sat-monitor-" + tag_name + ".exe", "wb") as file:

@@ -23,7 +23,7 @@ class Settings:
         jsonSettings = {
             "created_at": time.time(),
             "theme": "default",
-            "version": "0.1.0-beta",
+            "version": "0.5.0-beta",
         }
         self.saveSettingsFile(jsonSettings)
         
@@ -57,4 +57,10 @@ class Settings:
             else:
                 jsonSettings[key] = value
             self.saveSettingsFile(jsonSettings)
+            
+    def get(self, key):
+        return self.get_settings(key)
+    
+    def set(self, key, value):
+        return self.set_settings(key, value)
             
