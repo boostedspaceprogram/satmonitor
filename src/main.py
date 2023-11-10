@@ -32,7 +32,7 @@ def main():
         apply_stylesheet(app, theme=theme)
     
     # Tray handler
-    icon = QIcon(get_icon("logo_dark"))
+    icon = QIcon(get_icon("logo_tray"))
     
     # Adding item on the menu bar 
     tray = QSystemTrayIcon() 

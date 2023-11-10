@@ -32,6 +32,7 @@ class Icons(object):
         self.make_icon("upcoming_launches", "icons/tle_view.png")
         self.make_icon("logo", "icons/logo_white.png")
         self.make_icon("logo_dark", "icons/logo_dark.png")
+        self.make_icon("logo_tray", "icons/logo_tray.png")
         self.make_icon("about", "icon/AboutBox.svg")
         
         # Default fallback icon
