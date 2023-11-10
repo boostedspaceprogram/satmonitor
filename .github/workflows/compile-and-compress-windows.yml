@@ -35,7 +35,8 @@ jobs:
 
     - name: Update build number in .iss file
       run: |
-        (Get-Content SatMonitor-build.iss) -replace '0.5.0-beta', ${{ steps.semver.outputs.nextStrict }} | Set-Content SatMonitor-build.iss
+        sed -i "s/^#define MyAppVersion .*/#define MyAppVersion \"${{ steps.semver.outputs.nextStrict }}\"/" SatMonitor-build.iss
+      shell: bash
 
     - name: Build executable
       run: |
