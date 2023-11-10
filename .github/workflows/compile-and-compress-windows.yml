@@ -28,10 +28,8 @@ jobs:
       id: semver
       uses: ietf-tools/semver-action@v1
       with:
-        token: ${{ github.token }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         branch: main
-        patchAll: true
-        skipInvalidTags: true
 
     - name: Update build number in .iss file
       run: |
