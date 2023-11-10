@@ -30,6 +30,7 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         branch: main
+        patchAll: true
 
     - name: Update build number in .iss file
       run: |
