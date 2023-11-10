@@ -24,9 +24,21 @@ jobs:
       run: |
         pip install pyinstaller
 
+    - name: Generate SemVer
+      id: semver
+      uses: ietf-tools/semver-action@v1
+      with:
+        token: ${{ github.token }}
+        branch: main
+        patchAll: true
+        skipInvalidTags: true
+
+    - name: Update build number in .iss file
+      run: |
+        (Get-Content SatMonitor-build.iss) -replace '0.5.0-beta', ${{ steps.semver.outputs.nextStrict }} | Set-Content SatMonitor-build.iss
+
     - name: Build executable
       run: |
-        $BUILD_NUMBER = $env:BUILD_NUMBER
         pyinstaller Sat-Monitor.spec
 
     - name: Build installer file
@@ -39,3 +51,23 @@ jobs:
       with:
         name: compiled-installer
         path: exe
+  
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.semver.outputs.nextStrict }}
+        release_name: Release ${{ steps.semver.outputs.nextStrict }}
+        draft: true
+  
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./exe/
+        asset_name: Sat-Monitor-${{ steps.semver.outputs.nextStrict }}-windows-x86-64.exe
+        asset_content_type: application/octet-stream
