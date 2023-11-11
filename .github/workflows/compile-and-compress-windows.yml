@@ -50,25 +50,15 @@ jobs:
     - name: Upload compiled installer
       uses: actions/upload-artifact@v2
       with:
-        name: compiled-installer
-        path: exe
+        name: Sat-Monitor-${{ steps.semver.outputs.nextStrict }}-windows-x86-64.exe
+        path: exe/Sat-Monitor-windows-x86-64.exe
   
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create draft release with artifact
+      uses: ncipollo/release-action@v1
       with:
-        tag_name: ${{ steps.semver.outputs.nextStrict }}
-        release_name: Release ${{ steps.semver.outputs.nextStrict }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        artifacts: 'Sat-Monitor-${{ steps.semver.outputs.nextStrict }}-windows-x86-64.exe'
+        tag: ${{ steps.semver.outputs.nextStrict }}
+        makeLatest: true
         draft: true
-  
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./exe/
-        asset_name: Sat-Monitor-${{ steps.semver.outputs.nextStrict }}-windows-x86-64.exe
-        asset_content_type: application/octet-stream
+        prerelease: false
