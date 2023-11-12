@@ -4,13 +4,10 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import *
 
-from Functions.Globe import Globe
-from Functions.TLE import TLE
 from Functions.Requests import Requests
 from Functions.Settings import Settings
 from Functions.UserNotificationProvider import UserNotificationProvider
 
-# import all python files from GUI.Widgets
 from GUI.Widgets.About import *
 from GUI.Widgets.Livestream import *
 
@@ -71,8 +68,6 @@ class MDI():
         
         # self.LivestreamWindow()
         
-        # self.TLEWindow()
-        
         # self.upcomingLaunchesWindow()
         
     def AboutWindow(self):
@@ -80,22 +75,6 @@ class MDI():
     
     def LivestreamWindow(self):
         return LivestreamWindow(self.console, self.mdiArea)
-       
-    def TLEWindow(self):
-        # TLE data class
-        self.TLE = TLE(self.console, "https://celestrak.org/NORAD/elements/gp.php?GROUP=starlink&FORMAT=json")
-        self.TLE = self.TLE.TLETable()
-        
-        # Create a QMdiSubWindow widget
-        self.subWindow = QMdiSubWindow()
-        self.subWindow.setWindowTitle("TLE Data")
-        self.subWindow.setWindowIcon(get_icon("logo_dark"))
-        self.subWindow.resize(600, 500)
-        self.subWindow.setWidget(self.TLE)
-        
-        # Add the QMdiSubWindow widget to the QMdiArea widget
-        self.mdiArea.addSubWindow(self.subWindow)
-        return self.subWindow
         
     def upcomingLaunchesWindow(self):
         self.upcomingLaunches = Requests(self.console, "https://ll.thespacedevs.com/2.2.0/launch/upcoming/")

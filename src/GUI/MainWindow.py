@@ -55,8 +55,10 @@ class MainWindow(QMainWindow):
         self._close_console = self.add_action("Close console", "console", "Close console", True, self.on_close_console)
         self._close_console.setEnabled(False)
         
+        # Flight tab
+        self._open_live_flight = self.add_action("Live Flight", "default", "Open Live Flight", True, self.on_open_live_flight)
+        
         # Satellite tab
-        self._open_tle_view = self.add_action("TLE View", "tle_view", "Open TLE View", True, self.on_open_tle_view)
         self._open_upcoming_launches = self.add_action("Upcoming Launches", "default", "Open Upcoming Launches", True, self.on_open_upcoming_launches)
 
         # Ribbon
@@ -80,7 +82,6 @@ class MainWindow(QMainWindow):
         home_pane = home_tab.add_ribbon_pane("Home")
         grid_pane = home_tab.add_ribbon_pane("Grid")
         alert_pane = home_tab.add_ribbon_pane("Alerts")
-        window_pane = home_tab.add_ribbon_pane("Window")
         help_pane = home_tab.add_ribbon_pane("Help")
         
         # Home pane
@@ -95,6 +96,19 @@ class MainWindow(QMainWindow):
         alert_pane.add_ribbon_widget(RibbonButton(self, self._alert_action, True))
         alert_pane.add_ribbon_widget(RibbonButton(self, self._alert_mute, True))
         
+        # Flight Tab
+        flight_tab = self._ribbon.add_ribbon_tab("Flight")
+        flight_pane = flight_tab.add_ribbon_pane("Flight")
+        flight_pane.add_ribbon_widget(RibbonButton(self, self._open_live_flight, True))
+        
+        # Satellite Tab
+        satellite_tab = self._ribbon.add_ribbon_tab("Satellite")
+        satellite_pane = satellite_tab.add_ribbon_pane("Satellite")
+        satellite_pane.add_ribbon_widget(RibbonButton(self, self._open_upcoming_launches, True))
+        
+        # Help pane
+        help_pane.add_ribbon_widget(RibbonButton(self, self._open_about, True))
+        
         # System Tab
         system_tab = self._ribbon.add_ribbon_tab("System")
         configuration_pane = system_tab.add_ribbon_pane("Configuration")
@@ -103,25 +117,14 @@ class MainWindow(QMainWindow):
         console_pane = system_tab.add_ribbon_pane("Console")
         console_pane.add_ribbon_widget(RibbonButton(self, self._open_console, True))
         console_pane.add_ribbon_widget(RibbonButton(self, self._close_console, True))
+    
+    def on_open_live_flight(self):
+        self.console.log("Live Flight opened", "debug")
+        return None
         
-        satellite_tab = self._ribbon.add_ribbon_tab("Satellite")
-        satellite_pane = satellite_tab.add_ribbon_pane("Satellite")
-        satellite_pane.add_ribbon_widget(RibbonButton(self, self._open_tle_view, True))
-        satellite_pane.add_ribbon_widget(RibbonButton(self, self._open_upcoming_launches, True))
-        
-        # Window pane
-        
-        # Help pane
-        help_pane.add_ribbon_widget(RibbonButton(self, self._open_about, True))
-       
-       
     def on_open_about(self):
         self.console.log("About opened", "debug")
         self.mdiArea.AboutWindow()
-
-    def on_open_tle_view(self):
-        self.console.log("TLE view opened", "debug")
-        self.mdiArea.TLEWindow().show()
         
     def on_open_upcoming_launches(self):
         self.console.log("Upcoming Launches opened", "debug")
