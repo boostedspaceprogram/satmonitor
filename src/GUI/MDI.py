@@ -10,8 +10,8 @@ from Functions.UserNotificationProvider import UserNotificationProvider
 
 from GUI.Widgets.About import *
 from GUI.Widgets.Livestream import *
-
 from GUI.Ribbon.Icons import get_icon
+
 import os, sys
 
 class MDIArea(QMdiArea):
