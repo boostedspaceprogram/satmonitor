@@ -10,9 +10,9 @@ from Functions.UserNotificationProvider import UserNotificationProvider
 
 from GUI.Widgets.About import *
 from GUI.Widgets.Livestream import *
-
 from GUI.Ribbon.Icons import get_icon
-import os, sys
+
+import os, sys, json
 
 class MDIArea(QMdiArea):
 
@@ -150,27 +150,62 @@ class MDI():
         self.subWindow = QMdiSubWindow()
         self.subWindow.setWindowTitle("Upcoming Launches Details - " + item.text(1))
         self.subWindow.setWindowIcon(get_icon("logo_dark"))
-        self.subWindow.resize(400, 300)
+        self.subWindow.resize(800, 300)
         
-        # Create a QTreeWidget widget
-        self.treeWidget = QTreeWidget()
-        self.treeWidget.setAlternatingRowColors(True)
-        self.treeWidget.setHeaderHidden(False)
+        # Main widget for UI
+        self.centralWidget = QWidget()
         
-        # Set tree widget columns
-        self.treeWidget.setColumnCount(2)
-        self.treeWidget.setHeaderLabels(["Info", "Value"])
+        # Grid layout for central widget
+        self.gridLayout = QGridLayout(self.centralWidget)
         
-        # loop trough data and add to tree widget
+        # Get particular rocket details
         for launchDetails in self.upcomingLaunchesData["results"]:
             if launchDetails["rocket"]["configuration"]["name"] == item.text(0) and launchDetails["mission"]["name"] == item.text(1):
-                for key, value in launchDetails.items():
-                    mainWidgetItem = QTreeWidgetItem(self.treeWidget)
-                    mainWidgetItem.setText(0, key)
-                    mainWidgetItem.setText(1, str(value))
+                
+                missions_details = launchDetails.get("mission", {})
+                agencies_details = missions_details.get("agencies", {})
+                
+                # Get agency logo url
+                if agencies_details:
+                    agencyLogoUrl = agencies_details[0].get("logo_url", "")
+                    if agencyLogoUrl == None or agencyLogoUrl == "":
+                        agencyLogoUrl = "https://raw.githubusercontent.com/boostedspaceprogram/satmonitor/main/src/GUI/Ribbon/icons/logo_dark.png"
+                else:
+                    agencyLogoUrl = "https://raw.githubusercontent.com/boostedspaceprogram/satmonitor/main/src/GUI/Ribbon/icons/logo_dark.png"
+                    
+                # Top row widgets
+                companyLogoImage = QImage()
+                companyLogoImage.loadFromData(requests.get(agencyLogoUrl).content)
+                self.labelCompanyLogo = QLabel(self.centralWidget)
+                self.labelCompanyLogo.setPixmap(QPixmap(companyLogoImage).scaledToWidth(200))
+                self.gridLayout.addWidget(self.labelCompanyLogo, 0, 0)
+                
+                # Rocket name label
+                self.rocketNameLabel = QLabel(self.centralWidget)
+                self.rocketNameLabel.setText(launchDetails["rocket"]["configuration"]["name"])
+                self.rocketNameLabel.setStyleSheet("font-size: 25px; font-weight: bold;")
+                self.gridLayout.addWidget(self.rocketNameLabel, 0, 1)
+                
+                # Time till launch label
+                self.timeTillLaunchLabel = QLabel(self.centralWidget)
+                self.timeTillLaunchLabel.setText(launchDetails["net"])
+                self.timeTillLaunchLabel.setStyleSheet("font-size: 25px; font-weight: bold;")
+                self.gridLayout.addWidget(self.timeTillLaunchLabel, 0, 2)
+                
+                # Status description label
+                self.statusDescriptionLabel = QLabel(self.centralWidget)
+                self.statusDescriptionLabel.setText(launchDetails["status"]["description"])
+                self.gridLayout.addWidget(self.statusDescriptionLabel, 1, 0, 1, 3)
+                
+                # Probability label
+                self.probabilityLabel = QLabel(self.centralWidget)
+                self.probabilityLabel.setText("Probability: " + str(launchDetails["probability"]) + "%")
+                self.gridLayout.addWidget(self.probabilityLabel, 2, 0)
+                
+                
         
         # show sub window 
-        self.subWindow.setWidget(self.treeWidget)
+        self.subWindow.setWidget(self.centralWidget)
         
         # Add the QMdiSubWindow widget to the QMdiArea widget
         self.mdiArea.addSubWindow(self.subWindow)
