@@ -10,9 +10,10 @@ from Functions.UserNotificationProvider import UserNotificationProvider
 
 from GUI.Widgets.About import *
 from GUI.Widgets.Livestream import *
+from GUI.Widgets.UpcomingLaunches import *
 from GUI.Ribbon.Icons import get_icon
 
-import os, sys, json
+import os, sys, eel
 
 class MDIArea(QMdiArea):
 
@@ -75,142 +76,9 @@ class MDI():
     
     def LivestreamWindow(self):
         return LivestreamWindow(self.console, self.mdiArea)
-        
+    
     def upcomingLaunchesWindow(self):
-        self.upcomingLaunches = Requests(self.console, "https://ll.thespacedevs.com/2.2.0/launch/upcoming/")
-        self.upcomingLaunches.set_method("GET")
-        self.upcomingLaunches.set_headers({"User-Agent": "SatMonitor/1.0", "Accept": "application/json"})
-        self.upcomingLaunchesData = self.upcomingLaunches.make_requests()
-        
-        # Create a QMdiSubWindow widget
-        self.subWindow = QMdiSubWindow()
-        self.subWindow.setWindowTitle("Upcoming Launches")
-        self.subWindow.setWindowIcon(get_icon("logo_dark"))
-        self.subWindow.resize(800, 300)
-        
-        # Create a QTreeWidget widget 
-        self.treeWidget = QTreeWidget()
-        self.treeWidget.setAlternatingRowColors(True)
-        self.treeWidget.setHeaderHidden(False)
-        self.treeWidget.setSortingEnabled(True)
-        
-        # Set tree widget columns
-        if self.upcomingLaunchesData is not None:
-            self.subWindow.setWindowTitle("Upcoming Launches - " + str(len(self.upcomingLaunchesData["results"])) + " results")
-            self.treeWidget.setColumnCount(6)
-            self.treeWidget.setHeaderLabels(["Rocket", "Mission", "Net", "Status", "Pad", "Location"])
-
-            self.userNotificationProvider.send_notification("Upcoming Launches - " + str(len(self.upcomingLaunchesData["results"])) + " results")
-        else:
-            self.treeWidget.setColumnCount(1)
-            self.treeWidget.setHeaderLabels(["Error"])
-        
-        # sort by column 2 'Net' ascending
-        if self.upcomingLaunchesData is not None:
-            self.treeWidget.sortByColumn(2, Qt.AscendingOrder)
-        
-        # fit column 'Rocket', 'Mission', 'Net' and 'Status' to full width
-        if self.upcomingLaunchesData is not None:
-            self.treeWidget.header().setSectionResizeMode(0, QHeaderView.ResizeToContents)
-            self.treeWidget.header().setSectionResizeMode(1, QHeaderView.ResizeToContents)
-            self.treeWidget.header().setSectionResizeMode(2, QHeaderView.ResizeToContents)
-            self.treeWidget.header().setSectionResizeMode(3, QHeaderView.ResizeToContents)
-        
-        # Add data to main tree widget
-        if self.upcomingLaunchesData is not None:
-            for launch in self.upcomingLaunchesData["results"]:
-                mainWidgetItem = QTreeWidgetItem(self.treeWidget)
-                
-                # Add data to main widget item columns
-                mainWidgetItem.setText(0, launch["rocket"]["configuration"]["name"])
-                mainWidgetItem.setText(1, launch["mission"]["name"])
-                mainWidgetItem.setText(2, launch["net"])
-                mainWidgetItem.setText(3, launch["status"]["name"])
-                mainWidgetItem.setText(4, launch["pad"]["name"])
-                mainWidgetItem.setText(5, launch["pad"]["location"]["name"])
-                
-                # Add double click event to main widget item
-                mainWidgetItem.setFlags(mainWidgetItem.flags() | Qt.ItemIsSelectable | Qt.ItemIsEnabled)     
-        else:
-            mainWidgetItemNoData = QTreeWidgetItem(self.treeWidget)
-            mainWidgetItemNoData.setText(0, "No data available from API, please try again later.")
-            
-        # Add double click event on any tree widget item
-        self.treeWidget.itemDoubleClicked.connect(self.on_treeWidget_itemDoubleClicked)
-        
-        # Set tree widget as sub window widget
-        self.subWindow.setWidget(self.treeWidget)
-        
-        # Add the QMdiSubWindow widget to the QMdiArea widget
-        self.mdiArea.addSubWindow(self.subWindow)
-        return self.subWindow
-
-    def on_treeWidget_itemDoubleClicked(self, item):
-        # Create a QMdiSubWindow widget
-        self.subWindow = QMdiSubWindow()
-        self.subWindow.setWindowTitle("Upcoming Launches Details - " + item.text(1))
-        self.subWindow.setWindowIcon(get_icon("logo_dark"))
-        self.subWindow.resize(800, 300)
-        
-        # Main widget for UI
-        self.centralWidget = QWidget()
-        
-        # Grid layout for central widget
-        self.gridLayout = QGridLayout(self.centralWidget)
-        
-        # Get particular rocket details
-        for launchDetails in self.upcomingLaunchesData["results"]:
-            if launchDetails["rocket"]["configuration"]["name"] == item.text(0) and launchDetails["mission"]["name"] == item.text(1):
-                
-                missions_details = launchDetails.get("mission", {})
-                agencies_details = missions_details.get("agencies", {})
-                
-                # Get agency logo url
-                if agencies_details:
-                    agencyLogoUrl = agencies_details[0].get("logo_url", "")
-                    if agencyLogoUrl == None or agencyLogoUrl == "":
-                        agencyLogoUrl = "https://raw.githubusercontent.com/boostedspaceprogram/satmonitor/main/src/GUI/Ribbon/icons/logo_dark.png"
-                else:
-                    agencyLogoUrl = "https://raw.githubusercontent.com/boostedspaceprogram/satmonitor/main/src/GUI/Ribbon/icons/logo_dark.png"
-                    
-                # Top row widgets
-                companyLogoImage = QImage()
-                companyLogoImage.loadFromData(requests.get(agencyLogoUrl).content)
-                self.labelCompanyLogo = QLabel(self.centralWidget)
-                self.labelCompanyLogo.setPixmap(QPixmap(companyLogoImage).scaledToWidth(200))
-                self.gridLayout.addWidget(self.labelCompanyLogo, 0, 0)
-                
-                # Rocket name label
-                self.rocketNameLabel = QLabel(self.centralWidget)
-                self.rocketNameLabel.setText(launchDetails["rocket"]["configuration"]["name"])
-                self.rocketNameLabel.setStyleSheet("font-size: 25px; font-weight: bold;")
-                self.gridLayout.addWidget(self.rocketNameLabel, 0, 1)
-                
-                # Time till launch label
-                self.timeTillLaunchLabel = QLabel(self.centralWidget)
-                self.timeTillLaunchLabel.setText(launchDetails["net"])
-                self.timeTillLaunchLabel.setStyleSheet("font-size: 25px; font-weight: bold;")
-                self.gridLayout.addWidget(self.timeTillLaunchLabel, 0, 2)
-                
-                # Status description label
-                self.statusDescriptionLabel = QLabel(self.centralWidget)
-                self.statusDescriptionLabel.setText(launchDetails["status"]["description"])
-                self.gridLayout.addWidget(self.statusDescriptionLabel, 1, 0, 1, 3)
-                
-                # Probability label
-                self.probabilityLabel = QLabel(self.centralWidget)
-                self.probabilityLabel.setText("Probability: " + str(launchDetails["probability"]) + "%")
-                self.gridLayout.addWidget(self.probabilityLabel, 2, 0)
-                
-                
-        
-        # show sub window 
-        self.subWindow.setWidget(self.centralWidget)
-        
-        # Add the QMdiSubWindow widget to the QMdiArea widget
-        self.mdiArea.addSubWindow(self.subWindow)
-        self.subWindow.show()
-        return self.subWindow
+        return UpcomingLaunchesWindow(self.console, self.mdiArea)
     
     def settingsWindow(self):
         # Create a QMdiSubWindow widget
